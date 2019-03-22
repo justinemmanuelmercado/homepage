@@ -1,18 +1,18 @@
 export const websites = [
-  {
-    name: "Google",
-    link: "https://www.google.com"
-  },
-  {
-    name: "Reddit",
-    link: "https://www.reddit.com"
-  },
-  {
-    name: "eBay",
-    link: "https://www.eBay.com"
-  },
-  {
-    name: "Personal Blog",
-    link: "https://blog.ejmercado.com"
-  }
+    {
+        name: "Google",
+        url: "https://www.google.com"
+    },
+    {
+        name: "Reddit",
+        url: "https://www.reddit.com"
+    },
+    {
+        name: "eBay",
+        url: "https://www.eBay.com"
+    },
+    {
+        name: "Personal Blog",
+        url: "https://blog.ejmercado.com"
+    }
 ];
