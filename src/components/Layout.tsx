@@ -1,15 +1,10 @@
 import React from "react";
-import { Navbar } from "./Navbar";
+// import { Navbar } from "./Navbar";
 
 interface Props {
-  children: React.ReactChild[];
+    children: React.ReactChild[];
 }
 
 export function Layout(props: Props): React.FunctionComponentElement<Props> {
-  return (
-    <div className="container">
-      <Navbar />
-      {props.children}
-    </div>
-  );
+    return <div className="container">{props.children}</div>;
 }

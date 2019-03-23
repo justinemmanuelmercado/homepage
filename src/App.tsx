@@ -14,12 +14,8 @@ class App extends Component {
                 <Helmet>
                     <style type="text/css">{typography}</style>
                 </Helmet>
-                <div className="section">
-                    <Favorites />
-                </div>
-                <div className="section">
-                    <Bookmarks />
-                </div>
+                <Favorites />
+                <Bookmarks />
             </Layout>
         );
     }

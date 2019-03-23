@@ -23,17 +23,14 @@ export class Favorites extends React.Component<Props, State> {
     }
 
     private renderWebsites(): React.ReactElement[] {
-        const {
-            state: { websites }
-        } = this;
-        return websites.map((ws: Website) => {
+        return this.state.websites.map((ws: Website, i: number) => {
             return (
-                <div key={ws.name} className="column">
+                <div key={i} className="column is-one-fifth">
                     <div className="card">
                         <div className="card-image">
                             <figure className="image is-4by3">
                                 <img
-                                    src="https://bulma.io/images/placeholders/1280x960.png"
+                                    src="https://loremflickr.com/200/200"
                                     alt="Placeholder image"
                                 />
                             </figure>
@@ -45,9 +42,16 @@ export class Favorites extends React.Component<Props, State> {
     }
     public render(): React.ReactElement {
         return (
-            <div className="container">
-                <h1>Favorites</h1>
-                <div className="columns">{this.renderWebsites()}</div>
+            <div
+                style={{
+                    overflowX: "scroll"
+                }}
+                className="section"
+            >
+                <div className="container">
+                    <h1>Favorites</h1>
+                    <div className="columns">{this.renderWebsites()}</div>
+                </div>
             </div>
         );
     }
