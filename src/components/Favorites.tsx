@@ -1,13 +1,8 @@
 import React from "react";
 import { Title } from "./Title";
-import { getFavorites } from "../lib/api";
+import { getFavorites, Website } from "../lib/api";
 
 interface Props {}
-
-interface Website {
-    name: string;
-    url: string;
-}
 
 interface State {
     websites: Website[];

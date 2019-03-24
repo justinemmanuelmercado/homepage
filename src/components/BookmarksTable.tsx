@@ -1,11 +1,5 @@
 import React from "react";
-
-interface Bookmark {
-    title: string;
-    url: string;
-    image: string;
-}
-
+import { Bookmark } from "../lib/api";
 interface Props {
     items: number;
     bookmarks: Bookmark[];

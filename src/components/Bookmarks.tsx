@@ -1,13 +1,9 @@
 import React from "react";
 import { BookmarksTable } from "./BookmarksTable";
 import { Title } from "./Title";
-import { getBookmarks } from "../lib/api";
+import { getBookmarks, Bookmark } from "../lib/api";
 import { Modal } from "./Modal";
-interface Bookmark {
-    title: string;
-    url: string;
-    image: string;
-}
+
 interface State {
     bookmarks: Bookmark[];
     loading: boolean;

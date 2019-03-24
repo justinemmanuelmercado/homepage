@@ -1,13 +1,14 @@
 import { websites } from "../mock/websites";
 import { bookmarks } from "../mock/bookmarks";
 
-interface Bookmark {
+export interface Bookmark {
     title: string;
     url: string;
     image: string;
+    dateCreated: string;
 }
 
-interface Website {
+export interface Website {
     name: string;
     url: string;
 }
