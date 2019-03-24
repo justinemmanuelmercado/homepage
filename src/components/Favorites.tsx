@@ -1,5 +1,6 @@
 import React from "react";
-import { websites } from "../mock/websites";
+import { Title } from "./Title";
+import { getFavorites } from "../lib/api";
 
 interface Props {}
 
@@ -10,15 +11,20 @@ interface Website {
 
 interface State {
     websites: Website[];
+    loading: boolean;
 }
 
 export class Favorites extends React.Component<Props, State> {
     public state = {
-        websites: []
+        websites: [],
+        loading: true
     };
-    public componentDidMount(): void {
+    public async componentDidMount(): Promise<void> {
+        const websites = await getFavorites();
+
         this.setState({
-            websites: websites as Website[]
+            websites: websites as Website[],
+            loading: false
         });
     }
 
@@ -41,18 +47,27 @@ export class Favorites extends React.Component<Props, State> {
         });
     }
     public render(): React.ReactElement {
+        const loading = (
+            <div className="column">
+                <h2>Loading...</h2>
+            </div>
+        );
         return (
             <div
                 style={{
-                    overflowX: "scroll"
+                    overflowX: "auto"
                 }}
                 className="section"
             >
                 <div className="container">
-                    <h1>Favorites</h1>
-                    <div className="columns">{this.renderWebsites()}</div>
+                    <Title onClick={this.handleClick}>Favorites</Title>
+                    <div className="columns">
+                        {this.state.loading ? loading : this.renderWebsites()}
+                    </div>
                 </div>
             </div>
         );
     }
+
+    private handleClick = () => {};
 }
