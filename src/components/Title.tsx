@@ -6,7 +6,7 @@ interface Props {
     onClick: () => void;
 }
 
-export const Title = (props: Props) => {
+export const Title = (props: Props): React.ReactElement => {
     return (
         <div
             style={{

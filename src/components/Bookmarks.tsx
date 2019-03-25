@@ -67,7 +67,7 @@ export class Bookmarks extends React.Component<Props, State> {
         );
     }
 
-    private toggleModal(val: boolean) {
+    private toggleModal(val: boolean): void {
         console.log(val);
         this.setState({
             modalOpen: val

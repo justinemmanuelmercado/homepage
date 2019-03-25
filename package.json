@@ -59,7 +59,7 @@
   "lint-staged": {
     "*.{tsx,ts}": [
       "prettier --write",
-      "./node_modules/.bin/eslint --fix",
+      "./node_modules/.bin/eslint --warnings=0 --fix",
       "git add"
     ]
   }

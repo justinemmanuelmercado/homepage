@@ -8,7 +8,9 @@ interface Props {
     handleClose: () => void;
 }
 
-export const Modal: React.FunctionComponent<Props> = (props: Props) => {
+export const Modal: React.FunctionComponent<Props> = (
+    props: Props
+): React.ReactPortal => {
     return createPortal(
         <div className="modal is-active">
             <div className="modal-background" />
