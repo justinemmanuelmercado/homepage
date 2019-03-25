@@ -1,6 +1,0 @@
-diff a/src/components/Modal.tsx b/src/components/Modal.tsx	(rejected hunks)
-@@ -11 +11,3 @@ interface Props {
--export const Modal: React.FunctionComponent<Props> = (props: Props): React.ReactPortal => {
-+export const Modal: React.FunctionComponent<Props> = (
-+    props: Props
-+): React.ReactPortal => {
