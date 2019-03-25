@@ -14,7 +14,7 @@ export class Favorites extends React.Component<Props, State> {
         websites: [],
         loading: true
     };
-    public async componentDidMount(): Promise<void> {
+    public async componentDidMount() {
         const websites = await getFavorites();
 
         this.setState({
