@@ -6,6 +6,7 @@ export interface Bookmark {
     url: string;
     image: string;
     dateCreated: string;
+    id: string;
 }
 
 export interface Website {

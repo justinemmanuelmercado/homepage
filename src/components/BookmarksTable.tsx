@@ -1,5 +1,6 @@
 import React from "react";
 import { Bookmark } from "../lib/api";
+import { FaTrash, FaPlus } from "react-icons/fa";
 interface Props {
     items: number;
     bookmarks: Bookmark[];
@@ -7,13 +8,15 @@ interface Props {
 
 interface State {
     currentPage: number;
+    toDelete: string[];
 }
 
 export class BookmarksTable extends React.Component<Props, State> {
     public constructor(props: Props) {
         super(props);
         this.state = {
-            currentPage: 0
+            currentPage: 0,
+            toDelete: []
         };
     }
 
@@ -29,12 +32,43 @@ export class BookmarksTable extends React.Component<Props, State> {
 
         return rows.map((bm: Bookmark, i: number) => {
             return (
-                <tr key={i}>
+                <tr style={{ cursor: "pointer" }} key={i}>
+                    <td
+                        style={{
+                            padding: "0",
+                            margin: "auto",
+                            textAlign: "center",
+                            verticalAlign: "middle",
+                            cursor: "pointer"
+                        }}
+                    >
+                        <input
+                            onChange={() => this.check(bm.id)}
+                            checked={this.isChecked(bm.id)}
+                            type="checkbox"
+                        />
+                    </td>
                     <td>
                         <b>{bm.title}</b>
                     </td>
                     <td>{bm.url}</td>
                     <td>{bm.image}</td>
+                    <td>
+                        <div className="field is-grouped">
+                            <button
+                                onClick={() => this.redirect(bm.url)}
+                                className="is-small button"
+                            >
+                Open
+                            </button>
+                            <button
+                                onClick={() => this.redirect(bm.url, true)}
+                                className="is-small button"
+                            >
+                                <FaPlus /> Tab
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             );
         });
@@ -66,20 +100,38 @@ export class BookmarksTable extends React.Component<Props, State> {
             currentPage: page
         });
     }
+
+    private redirect(url: string, tab?: boolean): void {
+        if (tab) {
+            window.open(url, "_blank");
+            return;
+        }
+
+        window.open(url, "_self");
+    }
+
+    private isChecked(id: string): boolean {
+        return this.state.toDelete.includes(id);
+    }
+
+    private check(id: string): void {
+        const { toDelete } = this.state;
+        const ind = toDelete.indexOf(id);
+        if (ind < 0) {
+            toDelete.push(id);
+        } else {
+            toDelete.splice(ind, 1);
+        }
+
+        this.setState({ toDelete });
+    }
+
     public render(): React.ReactElement {
         return (
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>URL</th>
-                        <th>Image</th>
-                    </tr>
-                </thead>
-                <tbody>{this.renderBookmarkRows()}</tbody>
-                <tfoot>
-                    <tr>
-                        <td colSpan={3}>
+                        <td colSpan={5}>
                             <div
                                 className="is-flex"
                                 style={{
@@ -87,7 +139,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                                 }}
                             >
                                 <span>
-                  Showing page {this.state.currentPage + 1} out of{" "}
+                  Showing page {this.state.currentPage + 1} of{" "}
                                     {this.renderMaxPage()}
                                 </span>
                                 <span className="columns">
@@ -110,7 +162,24 @@ export class BookmarksTable extends React.Component<Props, State> {
                             </div>
                         </td>
                     </tr>
-                </tfoot>
+                    <tr>
+                        <th
+                            style={{
+                                padding: 0,
+                                width: 0
+                            }}
+                        >
+                            <button className="button is-danger">
+                                <FaTrash />
+                            </button>
+                        </th>
+                        <th>Title</th>
+                        <th>URL</th>
+                        <th>Image</th>
+                        <th />
+                    </tr>
+                </thead>
+                <tbody>{this.renderBookmarkRows()}</tbody>
             </table>
         );
     }
