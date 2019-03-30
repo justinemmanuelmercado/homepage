@@ -8,14 +8,29 @@ interface State {
     bookmarks: Bookmark[];
     loading: boolean;
     modalOpen: boolean;
+    newBookmark: NewBookmark;
 }
 interface Props {}
 
+export interface NewBookmark {
+    title: string;
+    url: string;
+    description: string;
+    tags: string[];
+}
+
+const blankBookmark: NewBookmark = {
+    title: "",
+    url: "",
+    description: "",
+    tags: []
+};
 export class Bookmarks extends React.Component<Props, State> {
     public state = {
         bookmarks: [],
         loading: true,
-        modalOpen: false
+        modalOpen: false,
+        newBookmark: blankBookmark
     };
 
     public async componentDidMount(): Promise<void> {
@@ -28,16 +43,62 @@ export class Bookmarks extends React.Component<Props, State> {
     }
 
     private renderModal = (): React.ReactElement => {
+        const footer = (
+            <div>
+                <button className="button">Save</button>
+            </div>
+        );
         return (
-            <Modal handleClose={() => this.toggleModal(false)} title={"Add Bookmark"}>
+            <Modal
+                footer={footer}
+                handleClose={() => this.toggleModal(false)}
+                title={"Add Bookmark"}
+            >
                 <div className="form">
                     <div className="field">
-                        <label className="label">Name</label>
+                        <label className="label">Title</label>
                         <div className="control">
                             <input
+                                value={this.state.newBookmark.title}
+                                onChange={this.handleInputChange}
+                                id="title"
                                 className="input"
                                 type="text"
-                                placeholder="e.g Alex Smith"
+                            />
+                        </div>
+                    </div>
+                    <div className="field">
+                        <label className="label">URL</label>
+                        <div className="control">
+                            <input
+                                value={this.state.newBookmark.title}
+                                onChange={this.handleInputChange}
+                                id="title"
+                                className="input"
+                                type="text"
+                            />
+                        </div>
+                    </div>
+                    <div className="field">
+                        <label className="label">Description</label>
+                        <div className="control">
+                            <textarea
+                                value={this.state.newBookmark.title}
+                                onChange={this.handleInputChange}
+                                id="title"
+                                className="textarea"
+                            />
+                        </div>
+                    </div>
+                    <div className="field">
+                        <label className="label">Tags</label>
+                        <div className="control">
+                            <input
+                                value={this.state.newBookmark.title}
+                                onChange={this.handleInputChange}
+                                id="title"
+                                className="input"
+                                type="text"
                             />
                         </div>
                     </div>
@@ -66,6 +127,18 @@ export class Bookmarks extends React.Component<Props, State> {
             </div>
         );
     }
+
+    private handleInputChange = (
+        evt: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const newBm = {
+            ...this.state.newBookmark,
+            [evt.currentTarget.id]: evt.currentTarget.value
+        };
+        this.setState({
+            newBookmark: newBm
+        });
+    };
 
     private toggleModal(val: boolean): void {
         console.log(val);

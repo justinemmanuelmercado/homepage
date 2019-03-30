@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 interface Props {
     children: React.ReactElement[] | React.ReactElement;
     title: string;
-    footer?: React.ReactElement[];
+    footer?: React.ReactElement;
     handleClose: () => void;
 }
 
@@ -16,7 +16,7 @@ export const Modal: React.FunctionComponent<Props> = (
             <div className="modal-background" />
             <div className="modal-card">
                 <header className="modal-card-head">
-                    <p className="modal-card-title">{props.title}</p>
+                    <h1 className="modal-card-title">{props.title}</h1>
                     <button
                         onClick={props.handleClose}
                         className="delete"

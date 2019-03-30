@@ -25,7 +25,6 @@ export class BookmarksTable extends React.Component<Props, State> {
     }
 
     private renderBookmarkRows(): React.ReactElement[] {
-        console.log(this.props.bookmarks.length);
         const start = this.state.currentPage * this.props.items;
         const end = start + this.props.items;
         let rows = this.props.bookmarks.slice(start, end);
@@ -38,8 +37,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                             padding: "0",
                             margin: "auto",
                             textAlign: "center",
-                            verticalAlign: "middle",
-                            cursor: "pointer"
+                            verticalAlign: "middle"
                         }}
                     >
                         <input

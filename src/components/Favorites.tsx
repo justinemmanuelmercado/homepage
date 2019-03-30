@@ -29,12 +29,14 @@ export class Favorites extends React.Component<Props, State> {
                 <div key={i} className="column is-one-fifth">
                     <div className="card">
                         <div className="card-image">
-                            <figure className="image is-4by3">
-                                <img
-                                    src="https://loremflickr.com/200/200"
-                                    alt="Placeholder image"
-                                />
-                            </figure>
+                            <img
+                                style={{
+                                    padding: 0,
+                                    margin: 0
+                                }}
+                                src="https://loremflickr.com/200/200"
+                                alt="Placeholder image"
+                            />
                         </div>
                     </div>
                 </div>
@@ -48,15 +50,15 @@ export class Favorites extends React.Component<Props, State> {
             </div>
         );
         return (
-            <div
-                style={{
-                    overflowX: "auto"
-                }}
-                className="section"
-            >
+            <div className="section">
                 <div className="container">
                     <Title onClick={this.handleClick}>Favorites</Title>
-                    <div className="columns">
+                    <div
+                        style={{
+                            overflowX: "auto"
+                        }}
+                        className="columns"
+                    >
                         {this.state.loading ? loading : this.renderWebsites()}
                     </div>
                 </div>

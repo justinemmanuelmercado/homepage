@@ -1,5 +1,10 @@
 import { websites } from "../mock/websites";
 import { bookmarks } from "../mock/bookmarks";
+import axios from "axios";
+
+const http = axios.create({
+    baseURL: process.env.REACT_APP_BACKEND_ROOT
+});
 
 export interface Bookmark {
     title: string;
@@ -30,4 +35,21 @@ export const getFavorites = (): Promise<Website[]> => {
             resolve(websites);
         }, 1000);
     });
+};
+
+export const putLink = async (
+    link: Website | Bookmark,
+    type: number
+): Promise<boolean> => {
+    try {
+        const newLink = {
+            ...link,
+            type
+        };
+        await http.put("/links", newLink);
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
 };
