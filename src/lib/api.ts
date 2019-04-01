@@ -1,5 +1,4 @@
 import { websites } from "../mock/websites";
-import { bookmarks } from "../mock/bookmarks";
 import axios from "axios";
 
 const http = axios.create({
@@ -9,7 +8,7 @@ const http = axios.create({
 export interface Bookmark {
     title: string;
     url: string;
-    image: string;
+    note: string;
     dateCreated: string;
     id: string;
 }
@@ -19,13 +18,13 @@ export interface Website {
     url: string;
 }
 
-export const getBookmarks = (): Promise<Bookmark[]> => {
-    return new Promise((resolve, reject) => {
-        if (!bookmarks) reject("Unable to get for some reason");
-        setTimeout(() => {
-            resolve(bookmarks);
-        }, 1000);
-    });
+export const getBookmarks = async (): Promise<Bookmark[]> => {
+    try {
+        return (await http.get("/link?type=1")).data;
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
 };
 
 export const getFavorites = (): Promise<Website[]> => {

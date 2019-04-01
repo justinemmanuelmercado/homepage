@@ -15,14 +15,14 @@ interface Props {}
 export interface NewBookmark {
     title: string;
     url: string;
-    description: string;
+    note: string;
     tags: string[];
 }
 
 const blankBookmark: NewBookmark = {
     title: "",
     url: "",
-    description: "",
+    note: "",
     tags: []
 };
 export class Bookmarks extends React.Component<Props, State> {
@@ -35,6 +35,7 @@ export class Bookmarks extends React.Component<Props, State> {
 
     public async componentDidMount(): Promise<void> {
         const bookmarks = await getBookmarks();
+        console.log(bookmarks);
         this.setState({
             bookmarks: bookmarks as Bookmark[],
             loading: false,
@@ -80,12 +81,12 @@ export class Bookmarks extends React.Component<Props, State> {
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label">Description</label>
+                        <label className="label">Note</label>
                         <div className="control">
                             <textarea
                                 value={this.state.newBookmark.title}
                                 onChange={this.handleInputChange}
-                                id="title"
+                                id="note"
                                 className="textarea"
                             />
                         </div>

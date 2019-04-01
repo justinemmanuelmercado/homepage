@@ -50,7 +50,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                         <b>{bm.title}</b>
                     </td>
                     <td>{bm.url}</td>
-                    <td>{bm.image}</td>
+                    <td>{bm.note}</td>
                     <td>
                         <div className="field is-grouped">
                             <button
@@ -173,7 +173,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                         </th>
                         <th>Title</th>
                         <th>URL</th>
-                        <th>Image</th>
+                        <th>Note</th>
                         <th />
                     </tr>
                 </thead>
