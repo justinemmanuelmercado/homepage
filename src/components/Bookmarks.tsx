@@ -1,8 +1,9 @@
 import React from "react";
 import { BookmarksTable } from "./BookmarksTable";
+import { ChipsInput } from "./ChipsInput";
 import { Title } from "./Title";
-import { getBookmarks, Bookmark } from "../lib/api";
 import { Modal } from "./Modal";
+import { getBookmarks, Bookmark } from "../lib/api";
 
 interface State {
     bookmarks: Bookmark[];
@@ -57,19 +58,19 @@ export class Bookmarks extends React.Component<Props, State> {
             >
                 <div className="form">
                     <div className="field">
-                        <label className="label">Title</label>
+                        <label className="label">URL</label>
                         <div className="control">
                             <input
-                                value={this.state.newBookmark.title}
+                                value={this.state.newBookmark.url}
                                 onChange={this.handleInputChange}
-                                id="title"
+                                id="url"
                                 className="input"
                                 type="text"
                             />
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label">URL</label>
+                        <label className="label">Title</label>
                         <div className="control">
                             <input
                                 value={this.state.newBookmark.title}
@@ -84,7 +85,7 @@ export class Bookmarks extends React.Component<Props, State> {
                         <label className="label">Note</label>
                         <div className="control">
                             <textarea
-                                value={this.state.newBookmark.title}
+                                value={this.state.newBookmark.note}
                                 onChange={this.handleInputChange}
                                 id="note"
                                 className="textarea"
@@ -93,15 +94,10 @@ export class Bookmarks extends React.Component<Props, State> {
                     </div>
                     <div className="field">
                         <label className="label">Tags</label>
-                        <div className="control">
-                            <input
-                                value={this.state.newBookmark.title}
-                                onChange={this.handleInputChange}
-                                id="title"
-                                className="input"
-                                type="text"
-                            />
-                        </div>
+                        <ChipsInput
+                            chips={this.state.newBookmark.tags}
+                            onChange={this.handleSetChips}
+                        />
                     </div>
                 </div>
             </Modal>
@@ -128,6 +124,15 @@ export class Bookmarks extends React.Component<Props, State> {
             </div>
         );
     }
+
+    private handleSetChips = (tags: string[]) => {
+        this.setState({
+            newBookmark: {
+                ...this.state.newBookmark,
+                tags
+            }
+        });
+    };
 
     private handleInputChange = (
         evt: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>

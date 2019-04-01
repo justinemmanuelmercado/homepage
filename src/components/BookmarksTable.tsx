@@ -11,6 +11,8 @@ interface State {
     toDelete: string[];
 }
 
+const columnsCount = 6;
+
 export class BookmarksTable extends React.Component<Props, State> {
     public constructor(props: Props) {
         super(props);
@@ -24,7 +26,15 @@ export class BookmarksTable extends React.Component<Props, State> {
         return Math.ceil(this.props.bookmarks.length / this.props.items);
     }
 
-    private renderBookmarkRows(): React.ReactElement[] {
+    private renderBookmarkRows(): React.ReactElement[] | React.ReactElement {
+        if (this.props.bookmarks.length === 0) {
+            return (
+                <tr>
+                    <td colSpan={columnsCount}>Unable to load links</td>
+                </tr>
+            );
+        }
+
         const start = this.state.currentPage * this.props.items;
         const end = start + this.props.items;
         let rows = this.props.bookmarks.slice(start, end);
@@ -51,6 +61,11 @@ export class BookmarksTable extends React.Component<Props, State> {
                     </td>
                     <td>{bm.url}</td>
                     <td>{bm.note}</td>
+                    <td>
+                        {bm.tags.map((tag, idx) => {
+                            <span key={idx}>{tag}</span>;
+                        })}
+                    </td>
                     <td>
                         <div className="field is-grouped">
                             <button
@@ -129,7 +144,7 @@ export class BookmarksTable extends React.Component<Props, State> {
             <table className="table">
                 <thead>
                     <tr>
-                        <td colSpan={5}>
+                        <td colSpan={columnsCount}>
                             <div
                                 className="is-flex"
                                 style={{
@@ -174,6 +189,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                         <th>Title</th>
                         <th>URL</th>
                         <th>Note</th>
+                        <th>Tags</th>
                         <th />
                     </tr>
                 </thead>

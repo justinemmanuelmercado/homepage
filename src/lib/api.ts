@@ -10,6 +10,7 @@ export interface Bookmark {
     url: string;
     note: string;
     dateCreated: string;
+    tags: string[];
     id: string;
 }
 
