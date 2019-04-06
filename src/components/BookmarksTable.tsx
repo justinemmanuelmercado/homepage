@@ -1,6 +1,7 @@
 import React from "react";
-import { Bookmark } from "../lib/api";
 import { FaTrash, FaPlus } from "react-icons/fa";
+import { DeleteConfirm } from "../components/DeleteConfirm";
+import { Bookmark, deleteBookmarks } from "../lib/api";
 interface Props {
     items: number;
     bookmarks: Bookmark[];
@@ -9,6 +10,7 @@ interface Props {
 interface State {
     currentPage: number;
     toDelete: string[];
+    deleteConfirm: boolean;
 }
 
 const columnsCount = 6;
@@ -18,7 +20,8 @@ export class BookmarksTable extends React.Component<Props, State> {
         super(props);
         this.state = {
             currentPage: 0,
-            toDelete: []
+            toDelete: [],
+            deleteConfirm: false
         };
     }
 
@@ -41,7 +44,7 @@ export class BookmarksTable extends React.Component<Props, State> {
 
         return rows.map((bm: Bookmark, i: number) => {
             return (
-                <tr style={{ cursor: "pointer" }} key={i}>
+                <tr key={i}>
                     <td
                         style={{
                             padding: "0",
@@ -56,16 +59,10 @@ export class BookmarksTable extends React.Component<Props, State> {
                             type="checkbox"
                         />
                     </td>
-                    <td>
-                        <b>{bm.title}</b>
-                    </td>
+                    <td>{new Date(bm.dateCreated).toDateString()}</td>
+                    <td>{bm.title}</td>
                     <td>{bm.url}</td>
                     <td>{bm.note}</td>
-                    <td>
-                        {bm.tags.map((tag, idx) => {
-                            <span key={idx}>{tag}</span>;
-                        })}
-                    </td>
                     <td>
                         <div className="field is-grouped">
                             <button
@@ -106,7 +103,6 @@ export class BookmarksTable extends React.Component<Props, State> {
     }
 
     private goToPage(page: number): void {
-        console.log(page);
         if (page < 0 || page >= this.renderMaxPage()) return;
 
         this.setState({
@@ -139,22 +135,39 @@ export class BookmarksTable extends React.Component<Props, State> {
         this.setState({ toDelete });
     }
 
+    private toggleDeleteConfirm(val: boolean): void {
+        this.setState({ deleteConfirm: val });
+    }
+
+    private handleDelete = async (): Promise<void> => {
+        this.toggleDeleteConfirm(false);
+        let items = this.props.bookmarks.map((val: Bookmark) => {
+            if (this.state.toDelete.includes(val.id)) {
+                return { dateCreated: val.dateCreated, id: val.id };
+            }
+        });
+
+        items = items.filter(Boolean);
+        await deleteBookmarks(items);
+    };
+
     public render(): React.ReactElement {
         return (
-            <table className="table">
+            <table className="table is-fullwidth is-narrow is-striped">
                 <thead>
+                    <DeleteConfirm
+                        isOpen={this.state.deleteConfirm}
+                        onCancel={() => this.toggleDeleteConfirm(false)}
+                        onConfirm={this.handleDelete}
+                    />
                     <tr>
                         <td colSpan={columnsCount}>
                             <div
                                 className="is-flex"
                                 style={{
-                                    justifyContent: "space-between"
+                                    justifyContent: "flex-end"
                                 }}
                             >
-                                <span>
-                  Showing page {this.state.currentPage + 1} of{" "}
-                                    {this.renderMaxPage()}
-                                </span>
                                 <span className="columns">
                                     <a
                                         className="column"
@@ -182,14 +195,21 @@ export class BookmarksTable extends React.Component<Props, State> {
                                 width: 0
                             }}
                         >
-                            <button className="button is-danger">
+                            <button
+                                disabled={this.state.toDelete.length <= 0}
+                                onClick={() => this.toggleDeleteConfirm(true)}
+                                style={{
+                                    borderColor: "transparent"
+                                }}
+                                className="button"
+                            >
                                 <FaTrash />
                             </button>
                         </th>
+                        <th />
                         <th>Title</th>
                         <th>URL</th>
                         <th>Note</th>
-                        <th>Tags</th>
                         <th />
                     </tr>
                 </thead>

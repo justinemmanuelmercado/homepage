@@ -3,9 +3,9 @@ import { createPortal } from "react-dom";
 
 interface Props {
     children: React.ReactElement[] | React.ReactElement;
-    title: string;
+    title?: string;
     footer?: React.ReactElement;
-    handleClose: () => void;
+    handleClose?: () => void;
 }
 
 export const Modal: React.FunctionComponent<Props> = (
@@ -15,14 +15,11 @@ export const Modal: React.FunctionComponent<Props> = (
         <div className="modal is-active">
             <div className="modal-background" />
             <div className="modal-card">
-                <header className="modal-card-head">
-                    <h1 className="modal-card-title">{props.title}</h1>
-                    <button
-                        onClick={props.handleClose}
-                        className="delete"
-                        aria-label="close"
-                    />
-                </header>
+                {props.title && (
+                    <header className="modal-card-head">
+                        <h1 className="modal-card-title title">{props.title}</h1>
+                    </header>
+                )}
                 <section className="modal-card-body">{props.children}</section>
                 <footer className="modal-card-foot">{props.footer}</footer>
             </div>

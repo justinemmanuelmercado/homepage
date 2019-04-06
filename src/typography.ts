@@ -1,6 +1,6 @@
 import Typography from "typography";
 // investigate types
-import moraga from "typography-theme-moraga";
+import stern from "typography-theme-stern-grove";
 
-const typography = new Typography(moraga);
+const typography = new Typography(stern);
 export default typography.toString();

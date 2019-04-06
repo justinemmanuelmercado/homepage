@@ -52,7 +52,7 @@ export class Favorites extends React.Component<Props, State> {
         return (
             <div className="section">
                 <div className="container">
-                    <Title onClick={this.handleClick}>Favorites</Title>
+                    <Title>Favorites</Title>
                     <div
                         style={{
                             overflowX: "auto"

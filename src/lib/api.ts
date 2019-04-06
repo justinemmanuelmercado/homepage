@@ -5,19 +5,38 @@ const http = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_ROOT
 });
 
-export interface Bookmark {
+export interface BaseBookmark {
     title: string;
     url: string;
     note: string;
-    dateCreated: string;
     tags: string[];
+}
+
+export interface Bookmark extends BaseBookmark {
     id: string;
+    dateCreated: string;
 }
 
 export interface Website {
     name: string;
     url: string;
 }
+
+export const deleteBookmarks = async (
+    items: ({ id: string; dateCreated: string } | undefined)[]
+): Promise<boolean> => {
+    try {
+        let parameters = "";
+        items.forEach((item: { id: string; dateCreated: string } | undefined) => {
+            if (!item) return;
+            parameters += `ids[]=${item.id}&dates[]=${item.dateCreated}&`;
+        });
+        await http.delete(`/link?${parameters}`);
+        return true;
+    } catch (e) {
+        return false;
+    }
+};
 
 export const getBookmarks = async (): Promise<Bookmark[]> => {
     try {
@@ -38,7 +57,7 @@ export const getFavorites = (): Promise<Website[]> => {
 };
 
 export const putLink = async (
-    link: Website | Bookmark,
+    link: Website | BaseBookmark,
     type: number
 ): Promise<boolean> => {
     try {
@@ -46,7 +65,7 @@ export const putLink = async (
             ...link,
             type
         };
-        await http.put("/links", newLink);
+        await http.put("/link", newLink);
         return true;
     } catch (e) {
         console.error(e);
