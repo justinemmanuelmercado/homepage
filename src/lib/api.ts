@@ -1,4 +1,5 @@
 import { websites } from "../mock/websites";
+import { quickLinks } from "../mock/quicklink";
 import axios from "axios";
 
 const http = axios.create({
@@ -15,11 +16,23 @@ export interface BaseBookmark {
 export interface Bookmark extends BaseBookmark {
     id: string;
     dateCreated: string;
+    type: number;
+    [key: string]: number | string | string[];
 }
 
 export interface Website {
     name: string;
     url: string;
+}
+
+export interface BaseQuickLink {
+    name: string;
+    url: string;
+}
+
+export interface QuickLink extends BaseQuickLink {
+    children?: BaseQuickLink[];
+    [key: string]: BaseQuickLink[] | string | undefined;
 }
 
 export const deleteBookmarks = async (
@@ -52,6 +65,15 @@ export const getFavorites = (): Promise<Website[]> => {
         if (!websites) reject("Unable to get for some reason");
         setTimeout(() => {
             resolve(websites);
+        }, 1000);
+    });
+};
+
+export const getQuickLinks = (): Promise<QuickLink[]> => {
+    return new Promise((resolve, reject) => {
+        if (!quickLinks) reject("Unable to get for some reason");
+        setTimeout(() => {
+            resolve(quickLinks);
         }, 1000);
     });
 };

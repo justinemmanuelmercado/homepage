@@ -13,7 +13,7 @@ interface State {
     deleteConfirm: boolean;
 }
 
-const columnsCount = 6;
+const columnsCount = 5;
 
 export class BookmarksTable extends React.Component<Props, State> {
     public constructor(props: Props) {
@@ -60,8 +60,9 @@ export class BookmarksTable extends React.Component<Props, State> {
                         />
                     </td>
                     <td>{new Date(bm.dateCreated).toDateString()}</td>
-                    <td>{bm.title}</td>
-                    <td>{bm.url}</td>
+                    <td>
+                        <a href={bm.url}>{bm.title}</a>
+                    </td>
                     <td>{bm.note}</td>
                     <td>
                         <div className="field is-grouped">
@@ -207,9 +208,8 @@ export class BookmarksTable extends React.Component<Props, State> {
                             </button>
                         </th>
                         <th />
-                        <th>Title</th>
-                        <th>URL</th>
-                        <th>Note</th>
+                        <th />
+                        <th />
                         <th />
                     </tr>
                 </thead>

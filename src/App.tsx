@@ -3,8 +3,9 @@ import "./App.css";
 import typography from "./typography";
 
 import { Helmet } from "react-helmet";
-import { Layout } from "./components/Layout";
 import { Bookmarks } from "./components/Bookmarks";
+import { Layout } from "./components/Layout";
+import { QuickLinks } from "./components/QuickLinks";
 class App extends Component {
     public render(): React.ReactElement {
         return (
@@ -12,7 +13,7 @@ class App extends Component {
                 <Helmet>
                     <style type="text/css">{typography}</style>
                 </Helmet>
-                {/* <Favorites /> */}
+                <QuickLinks />
                 <Bookmarks />
             </Layout>
         );
