@@ -1,15 +1,19 @@
 import React from "react";
+import { FaPlus } from "react-icons/fa";
 import { QuickLink } from "./QuickLink";
+import { NewQuickLinkForm } from "./NewQuickLinkForm";
 import { getQuickLinks, QuickLink as QuickLinkInterface } from "../lib/api";
 
 interface Props {}
 interface State {
     quickLinks: QuickLinkInterface[];
+    modalOpen: boolean;
 }
 
 export class QuickLinks extends React.Component<Props, State> {
     public state = {
-        quickLinks: []
+        quickLinks: [],
+        modalOpen: false
     };
 
     public async componentDidMount(): Promise<void> {
@@ -27,7 +31,24 @@ export class QuickLinks extends React.Component<Props, State> {
                         return <QuickLink key={ql.url} link={ql} />;
                     })}
                 </div>
+                <div className="navbar-end">
+                    <div className="navbar-item">
+                        <button className="button" onClick={() => this.toggleModal(true)}>
+                            <FaPlus />
+                        </button>
+                    </div>
+                </div>
+                <NewQuickLinkForm
+                    isOpen={this.state.modalOpen}
+                    toggleModal={this.toggleModal}
+                />
             </nav>
         );
     }
+
+    private toggleModal = (val: boolean) => {
+        this.setState({
+            modalOpen: val
+        });
+    };
 }

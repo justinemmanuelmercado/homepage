@@ -1,4 +1,5 @@
 import React from "react";
+import { FaSearch } from "react-icons/fa";
 import { BookmarksTable } from "./BookmarksTable";
 import { NewBookmarkForm } from "./NewBookmarkForm";
 import { getBookmarks, Bookmark } from "../lib/api";
@@ -45,11 +46,9 @@ export class Bookmarks extends React.Component<Props, State> {
             bookmarks = bookmarks.filter((bookmark: Bookmark) => {
                 let match = false;
                 for (const key in bookmark as Bookmark) {
+                    if (typeof bookmark[key] !== "string") continue;
                     const bookmarkAttr = (bookmark[key] as string).toLowerCase();
-                    if (
-                        typeof bookmark[key] === "string" &&
-            bookmarkAttr.indexOf(query.toLowerCase()) !== -1
-                    ) {
+                    if (bookmarkAttr.indexOf(query.toLowerCase()) !== -1) {
                         match = true;
                         break;
                     }
@@ -63,25 +62,31 @@ export class Bookmarks extends React.Component<Props, State> {
             <div className="section">
                 <div className="container">
                     <div className="columns">
-                        <div className="column  is-one-fifth">
-                            <button className="button" onClick={() => this.toggleModal(true)}>
-                Add Bookmark
-                            </button>
-                        </div>
                         <div className="column">
-                            <input
-                                onChange={this.handleChangeQuery}
-                                placeholder="Search..."
-                                type="text"
-                                value={this.state.query}
-                                className="input"
-                            />
+                            <div className="field">
+                                <p className="control has-icons-left">
+                                    <input
+                                        onChange={this.handleChangeQuery}
+                                        placeholder="Search..."
+                                        type="text"
+                                        value={this.state.query}
+                                        className="input"
+                                    />
+                                    <span className="icon is-small is-left">
+                                        <FaSearch />
+                                    </span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     {this.state.loading ? (
                         loading
                     ) : (
-                        <BookmarksTable items={10} bookmarks={bookmarks} />
+                        <BookmarksTable
+                            toggleModal={this.toggleModal}
+                            items={10}
+                            bookmarks={bookmarks}
+                        />
                     )}
                 </div>
                 <NewBookmarkForm

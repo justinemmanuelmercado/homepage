@@ -3,6 +3,7 @@ import { FaTrash, FaPlus } from "react-icons/fa";
 import { DeleteConfirm } from "../components/DeleteConfirm";
 import { Bookmark, deleteBookmarks } from "../lib/api";
 interface Props {
+    toggleModal: (val: boolean) => void;
     items: number;
     bookmarks: Bookmark[];
 }
@@ -155,20 +156,28 @@ export class BookmarksTable extends React.Component<Props, State> {
     public render(): React.ReactElement {
         return (
             <table className="table is-fullwidth is-narrow is-striped">
+                <DeleteConfirm
+                    isOpen={this.state.deleteConfirm}
+                    onCancel={() => this.toggleDeleteConfirm(false)}
+                    onConfirm={this.handleDelete}
+                />
                 <thead>
-                    <DeleteConfirm
-                        isOpen={this.state.deleteConfirm}
-                        onCancel={() => this.toggleDeleteConfirm(false)}
-                        onConfirm={this.handleDelete}
-                    />
                     <tr>
                         <td colSpan={columnsCount}>
                             <div
                                 className="is-flex"
                                 style={{
-                                    justifyContent: "flex-end"
+                                    justifyContent: "space-between"
                                 }}
                             >
+                                <span>
+                                    <button
+                                        className="button"
+                                        onClick={() => this.props.toggleModal(true)}
+                                    >
+                    Add Bookmark
+                                    </button>
+                                </span>
                                 <span className="columns">
                                     <a
                                         className="column"
