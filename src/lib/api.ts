@@ -1,5 +1,4 @@
 import { websites } from "../mock/websites";
-import { quickLinks } from "../mock/quicklink";
 import axios from "axios";
 
 const http = axios.create({
@@ -31,8 +30,12 @@ export interface BaseQuickLink {
 }
 
 export interface QuickLink extends BaseQuickLink {
-    children?: BaseQuickLink[];
-    [key: string]: BaseQuickLink[] | string | undefined;
+    children: Map<string, string>;
+    [key: string]: Map<string, string> | string | undefined;
+}
+
+export interface NewQuickLink extends BaseQuickLink {
+    children: [string, string][];
 }
 
 export const deleteBookmarks = async (
@@ -69,17 +72,23 @@ export const getFavorites = (): Promise<Website[]> => {
     });
 };
 
-export const getQuickLinks = (): Promise<QuickLink[]> => {
-    return new Promise((resolve, reject) => {
-        if (!quickLinks) reject("Unable to get for some reason");
-        setTimeout(() => {
-            resolve(quickLinks);
-        }, 1000);
-    });
+export const getQuickLinks = async (): Promise<QuickLink[]> => {
+    try {
+        const items = (await http.get("/link?type=2")).data;
+        return items.map((link: NewQuickLink) => {
+            return {
+                ...link,
+                children: new Map(link.children)
+            };
+        });
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
 };
 
 export const putLink = async (
-    link: Website | BaseBookmark,
+    link: Website | BaseBookmark | NewQuickLink,
     type: number
 ): Promise<boolean> => {
     try {

@@ -35,7 +35,12 @@ export const ChipsInput = (
                     </div>
                 );
             })}
-            <div className="control">
+            <div
+                className="control"
+                style={{
+                    width: "100%"
+                }}
+            >
                 <form onSubmit={addChip}>
                     <input
                         ref={inputRef}
@@ -44,6 +49,9 @@ export const ChipsInput = (
                         id="newTag"
                         className="chips-input"
                         type="text"
+                        style={{
+                            width: "100%"
+                        }}
                     />
                 </form>
             </div>

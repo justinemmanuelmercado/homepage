@@ -2,20 +2,11 @@ export const quickLinks = [
     {
         name: "Reddit",
         url: "https://www.reddit.com",
-        children: [
-            {
-                name: "Hearthstone",
-                url: "https://www.reddit.com/r/hearthstone"
-            },
-            {
-                name: "AskReddit",
-                url: "https://www.reddit.com/r/askreddit"
-            },
-            {
-                name: "FashionReps",
-                url: "https://www.reddit.com/r/fashionreps"
-            }
-        ]
+        children: new Map([
+            ["Hearthstone", "https://www.reddit.com/r/hearthstone"],
+            ["AskReddit", "https://www.reddit.com/r/askreddit"],
+            ["FashionReps", "https://www.reddit.com/r/fashionreps"]
+        ])
     },
     {
         name: "Youtube",

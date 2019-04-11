@@ -18,6 +18,7 @@ export class QuickLinks extends React.Component<Props, State> {
 
     public async componentDidMount(): Promise<void> {
         const ql = await getQuickLinks();
+        console.log(ql);
         this.setState({
             quickLinks: ql
         });

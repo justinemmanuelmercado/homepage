@@ -9,12 +9,21 @@ export const QuickLink = (
     props: Props
 ): React.FunctionComponentElement<Props> => {
     const ql = props.link;
-    if (ql.children) {
+    if (ql.children.size > 0) {
+        const childNodes = [];
+        for (const [name, url] of ql.children) {
+            childNodes.push(
+                <a key={url} href={url} className="navbar-item">
+                    {name}
+                </a>
+            );
+        }
         return (
-            <div className="navbar-item">
+            <div className="navbar-item has-dropdown is-hoverable">
                 <a className="navbar-link" href={ql.url}>
                     {ql.name}
                 </a>
+                <div className="navbar-dropdown">{childNodes}</div>
             </div>
         );
     } else {
