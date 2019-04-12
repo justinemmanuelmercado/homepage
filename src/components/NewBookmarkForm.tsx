@@ -1,5 +1,5 @@
 import React from "react";
-import { putLink, BaseBookmark } from "../lib/api";
+import { BaseBookmark } from "../lib/api";
 import { Modal } from "./Modal";
 
 interface State {
@@ -8,6 +8,7 @@ interface State {
 }
 
 interface Props {
+    handleSubmit: (newBookmark: BaseBookmark) => Promise<void>;
     toggleModal: (v: boolean) => void;
     isOpen: boolean;
 }
@@ -49,7 +50,7 @@ export class NewBookmarkForm extends React.Component<Props, State> {
     private handleSubmit = async (): Promise<void> => {
         const { newBookmark } = this.state;
         this.setState({ loading: true });
-        await putLink(newBookmark, 1);
+        this.props.handleSubmit(newBookmark);
         this.setState({ loading: false });
         this.props.toggleModal(false);
     };

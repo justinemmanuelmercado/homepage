@@ -2,7 +2,12 @@ import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { QuickLink } from "./QuickLink";
 import { NewQuickLinkForm } from "./NewQuickLinkForm";
-import { getQuickLinks, QuickLink as QuickLinkInterface } from "../lib/api";
+import {
+    getQuickLinks,
+    QuickLink as QuickLinkInterface,
+    NewQuickLink,
+    putLink
+} from "../lib/api";
 
 interface Props {}
 interface State {
@@ -17,11 +22,7 @@ export class QuickLinks extends React.Component<Props, State> {
     };
 
     public async componentDidMount(): Promise<void> {
-        const ql = await getQuickLinks();
-        console.log(ql);
-        this.setState({
-            quickLinks: ql
-        });
+        await this.loadQuickLinks();
     }
 
     public render(): React.ReactElement {
@@ -42,14 +43,27 @@ export class QuickLinks extends React.Component<Props, State> {
                 <NewQuickLinkForm
                     isOpen={this.state.modalOpen}
                     toggleModal={this.toggleModal}
+                    handleSubmit={this.handleSubmit}
                 />
             </nav>
         );
     }
 
+    private handleSubmit = async (ql: NewQuickLink) => {
+        await putLink(ql, 2);
+        await this.loadQuickLinks();
+    };
+
     private toggleModal = (val: boolean) => {
         this.setState({
             modalOpen: val
+        });
+    };
+
+    private loadQuickLinks = async () => {
+        const ql = await getQuickLinks();
+        this.setState({
+            quickLinks: ql
         });
     };
 }

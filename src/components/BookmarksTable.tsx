@@ -5,6 +5,7 @@ import { Bookmark, deleteBookmarks } from "../lib/api";
 interface Props {
     toggleModal: (val: boolean) => void;
     items: number;
+    loadBookmarks: () => Promise<void>;
     bookmarks: Bookmark[];
 }
 
@@ -151,6 +152,7 @@ export class BookmarksTable extends React.Component<Props, State> {
 
         items = items.filter(Boolean);
         await deleteBookmarks(items);
+        await this.props.loadBookmarks();
     };
 
     public render(): React.ReactElement {

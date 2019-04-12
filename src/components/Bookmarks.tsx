@@ -2,7 +2,7 @@ import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { BookmarksTable } from "./BookmarksTable";
 import { NewBookmarkForm } from "./NewBookmarkForm";
-import { getBookmarks, Bookmark } from "../lib/api";
+import { putLink, BaseBookmark, getBookmarks, Bookmark } from "../lib/api";
 
 interface State {
     bookmarks: Bookmark[];
@@ -86,16 +86,35 @@ export class Bookmarks extends React.Component<Props, State> {
                             toggleModal={this.toggleModal}
                             items={10}
                             bookmarks={bookmarks}
+                            loadBookmarks={this.loadBookmarks}
                         />
                     )}
                 </div>
                 <NewBookmarkForm
+                    handleSubmit={this.handleSubmit}
                     isOpen={this.state.modalOpen}
                     toggleModal={this.toggleModal}
                 />
             </div>
         );
     }
+
+    private handleSubmit = async (newBookmark: BaseBookmark) => {
+        await putLink(newBookmark, 1);
+        await this.loadBookmarks();
+    };
+
+    private loadBookmarks = async () => {
+        this.setState({
+            loading: true
+        });
+        const bookmarks = await getBookmarks();
+        this.setState({
+            bookmarks: bookmarks as Bookmark[],
+            loading: false,
+            modalOpen: false
+        });
+    };
 
     private toggleModal = (val: boolean): void => {
         this.setState({

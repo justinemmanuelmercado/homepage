@@ -1,7 +1,7 @@
 import React from "react";
 import { ChipsInput } from "./ChipsInput";
 import { Modal } from "./Modal";
-import { putLink, QuickLink, NewQuickLink } from "../lib/api";
+import { QuickLink, NewQuickLink } from "../lib/api";
 
 interface State {
     newQuickLink: QuickLink;
@@ -11,6 +11,7 @@ interface State {
 interface Props {
     toggleModal: (v: boolean) => void;
     isOpen: boolean;
+    handleSubmit: (ql: NewQuickLink) => Promise<void>;
 }
 
 const childSeparator = "~~";
@@ -47,7 +48,7 @@ export class NewQuickLinkForm extends React.Component<Props, State> {
         };
         console.table(toSubmit);
         this.setState({ loading: true });
-        await putLink(toSubmit, 2);
+        this.props.handleSubmit(toSubmit);
         this.setState({ loading: false });
         this.props.toggleModal(false);
     };
