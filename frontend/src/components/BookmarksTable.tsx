@@ -1,9 +1,9 @@
 import React from "react";
-import { FaTrash, FaPlus } from "react-icons/fa";
+import { FaTrash, FaPlus, FaEdit } from "react-icons/fa";
 import { DeleteConfirm } from "../components/DeleteConfirm";
-import { Bookmark, deleteBookmarks } from "../lib/api";
+import { Bookmark, deleteBookmarks, BaseBookmark } from "../lib/api";
 interface Props {
-    toggleModal: (val: boolean) => void;
+    toggleModal: (val: boolean, bookmark?: BaseBookmark) => void;
     items: number;
     loadBookmarks: () => Promise<void>;
     bookmarks: Bookmark[];
@@ -72,7 +72,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                                 onClick={() => this.redirect(bm.url)}
                                 className="is-small button"
                             >
-                Open
+                                Open
                             </button>
                             <button
                                 onClick={() => this.redirect(bm.url, true)}
@@ -80,11 +80,24 @@ export class BookmarksTable extends React.Component<Props, State> {
                             >
                                 <FaPlus /> Tab
                             </button>
+                            <button onClick={() => this.handleEdit(bm)}className="is-small button">
+                                <FaEdit />
+                            </button>
                         </div>
                     </td>
                 </tr>
             );
         });
+    }
+
+    private handleEdit = (bookmark: Bookmark) => {
+        const bm = {
+            title: bookmark.title,
+            url: bookmark.url,
+            note: bookmark.note,
+            tags: bookmark.tags
+        }
+        this.props.toggleModal(true, bm);
     }
 
     private renderPageNumbers(): React.ReactElement[] {
@@ -177,7 +190,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                                         className="button"
                                         onClick={() => this.props.toggleModal(true)}
                                     >
-                    Add Bookmark
+                                        Add Bookmark
                                     </button>
                                 </span>
                                 <span className="columns">

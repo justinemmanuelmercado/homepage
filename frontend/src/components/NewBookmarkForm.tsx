@@ -8,6 +8,7 @@ interface State {
 }
 
 interface Props {
+    currentBookmark?: BaseBookmark;
     handleSubmit: (newBookmark: BaseBookmark) => Promise<void>;
     toggleModal: (v: boolean) => void;
     isOpen: boolean;
@@ -23,7 +24,7 @@ const blankBookmark: BaseBookmark = {
 export class NewBookmarkForm extends React.Component<Props, State> {
     public state = {
         loading: false,
-        newBookmark: blankBookmark
+        newBookmark: this.props.currentBookmark ? this.props.currentBookmark : blankBookmark
     };
 
     private handleInputChange = (
@@ -47,6 +48,7 @@ export class NewBookmarkForm extends React.Component<Props, State> {
         });
     };
 
+    
     private handleSubmit = async (): Promise<void> => {
         const { newBookmark } = this.state;
         this.setState({ loading: true });
@@ -54,6 +56,8 @@ export class NewBookmarkForm extends React.Component<Props, State> {
         this.setState({ loading: false });
         this.props.toggleModal(false);
     };
+    
+
     public render(): React.ReactElement {
         if (!this.props.isOpen) return <></>;
         const footer = (

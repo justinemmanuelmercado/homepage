@@ -9,6 +9,7 @@ interface State {
 }
 
 interface Props {
+    currentQuickLink?: QuickLink;
     toggleModal: (v: boolean) => void;
     isOpen: boolean;
     handleSubmit: (ql: NewQuickLink) => Promise<void>;
@@ -25,7 +26,7 @@ const blankQuickLink: QuickLink = {
 export class NewQuickLinkForm extends React.Component<Props, State> {
     public state = {
         loading: false,
-        newQuickLink: blankQuickLink
+        newQuickLink: this.props.currentQuickLink ? this.props.currentQuickLink : blankQuickLink
     };
 
     private handleInputChange = (

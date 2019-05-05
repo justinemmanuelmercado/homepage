@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaEdit } from "react-icons/fa";
 import { QuickLink } from "./QuickLink";
 import { NewQuickLinkForm } from "./NewQuickLinkForm";
 import {
@@ -34,6 +34,11 @@ export class QuickLinks extends React.Component<Props, State> {
                     })}
                 </div>
                 <div className="navbar-end">
+                <div className="navbar-item">
+                        <button className="button" onClick={() => this.toggleModal(true)}>
+                            <FaEdit />
+                        </button>
+                    </div>
                     <div className="navbar-item">
                         <button className="button" onClick={() => this.toggleModal(true)}>
                             <FaPlus />

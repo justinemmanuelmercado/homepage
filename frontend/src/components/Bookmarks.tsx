@@ -9,6 +9,7 @@ interface State {
     loading: boolean;
     modalOpen: boolean;
     query: string;
+    editableBookmark?: BaseBookmark
 }
 interface Props {}
 export class Bookmarks extends React.Component<Props, State> {
@@ -16,7 +17,8 @@ export class Bookmarks extends React.Component<Props, State> {
         bookmarks: [],
         loading: true,
         modalOpen: false,
-        query: ""
+        query: "",
+        editableBookmark: undefined
     };
 
     public async componentDidMount(): Promise<void> {
@@ -91,6 +93,7 @@ export class Bookmarks extends React.Component<Props, State> {
                     )}
                 </div>
                 <NewBookmarkForm
+                    currentBookmark={this.state.editableBookmark}   
                     handleSubmit={this.handleSubmit}
                     isOpen={this.state.modalOpen}
                     toggleModal={this.toggleModal}
@@ -116,9 +119,19 @@ export class Bookmarks extends React.Component<Props, State> {
         });
     };
 
-    private toggleModal = (val: boolean): void => {
-        this.setState({
-            modalOpen: val
-        });
+    private toggleModal = (val: boolean, bookmark?: BaseBookmark): void => {
+        let newState;
+        if(bookmark){
+           newState = {
+               modalOpen: val,
+               editableBookmark: bookmark
+           }
+           newState.editableBookmark = bookmark 
+        } else {
+            newState = {
+                modalOpen: val
+            }
+        }
+        this.setState(newState);
     };
 }
