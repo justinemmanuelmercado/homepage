@@ -63,7 +63,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                     </td>
                     <td>{new Date(bm.dateCreated).toDateString()}</td>
                     <td>
-                        <a href={bm.url}>{bm.title}</a>
+                        <a href={bm.url}>{bm.name}</a>
                     </td>
                     <td>{bm.note}</td>
                     <td>
@@ -92,7 +92,7 @@ export class BookmarksTable extends React.Component<Props, State> {
 
     private handleEdit = (bookmark: Bookmark) => {
         const bm = {
-            title: bookmark.title,
+            name: bookmark.name,
             url: bookmark.url,
             note: bookmark.note,
             tags: bookmark.tags

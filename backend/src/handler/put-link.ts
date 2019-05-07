@@ -1,24 +1,36 @@
-/* eslint-disable */
-import uuid from 'uuid';
 import Express from "express";
-import { putLink } from "../db";
+import { Connection } from "typeorm";
+import { QuickLink } from "../entity/QuickLink";
+import { Bookmark } from "../entity/Bookmark";
+// import { putLink } from "../db";
 
-export const PutLink = async (req: Express.Request, res: Express.Response) => {
+async function putLink(body: any, connection: Connection) {
+    let newLink;
+    if (body.type == 1) {
+        newLink = new Bookmark();
+        newLink.name = body.name;
+        newLink.url = body.url;
+        newLink.note = body.note;
+        newLink.tags = body.tags;
+    } else if (body.type == 2) {
+        newLink = new QuickLink();
+        newLink.name = body.name;
+        newLink.url = body.url;
+        newLink.children = body.children;
+    } else {
+        throw `invalid type: ${body.type}`
+    }
+    await connection.manager.save(newLink);
+}
+
+export const PutLink = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
     let response = {
         table: process.env.TABLE_NAME,
         statusCode: 200,
         body: JSON.stringify('Successfully inserted object'),
     };
-    const params = {
-        Item: {
-            ...req.body,
-            "id": uuid.v1(),
-            "dateCreated": new Date().toISOString()
-        },
-        TableName: process.env.TABLE_NAME as string
-    };
     try {
-        await putLink(params);
+        await putLink(req.body, connection);
         res.status(200);
         res.json({
             message: response

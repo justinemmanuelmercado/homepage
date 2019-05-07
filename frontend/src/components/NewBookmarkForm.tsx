@@ -15,7 +15,7 @@ interface Props {
 }
 
 const blankBookmark: BaseBookmark = {
-    title: "",
+    name: "",
     url: "",
     note: "",
     tags: []
@@ -98,12 +98,12 @@ export class NewBookmarkForm extends React.Component<Props, State> {
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label">Title</label>
+                        <label className="label">Name</label>
                         <div className="control">
                             <input
-                                value={this.state.newBookmark.title}
+                                value={this.state.newBookmark.name}
                                 onChange={this.handleInputChange}
-                                id="title"
+                                id="name"
                                 className="input"
                                 type="text"
                             />

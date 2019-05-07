@@ -5,19 +5,22 @@ interface Props {
     link: QuickLinkInterface;
 }
 
+const childSeparator = "~~";
+
 export const QuickLink = (
     props: Props
 ): React.FunctionComponentElement<Props> => {
     const ql = props.link;
-    if (ql.children.size > 0) {
-        const childNodes = [];
-        for (const [name, url] of ql.children) {
-            childNodes.push(
-                <a key={url} href={url} className="navbar-item">
+    if (ql.children.length > 0) {
+        const childNodes = ql.children.map(
+            (child: string): React.ReactElement => {
+                const [name, url] = child.split(childSeparator);
+                return <a key={url} href={url} className="navbar-item">
                     {name}
                 </a>
-            );
-        }
+
+            }
+        );
         return (
             <div className="navbar-item has-dropdown is-hoverable">
                 <a className="navbar-link" href={ql.url}>

@@ -5,7 +5,6 @@ import { NewQuickLinkForm } from "./NewQuickLinkForm";
 import {
     getQuickLinks,
     QuickLink as QuickLinkInterface,
-    NewQuickLink,
     putLink
 } from "../lib/api";
 
@@ -54,7 +53,7 @@ export class QuickLinks extends React.Component<Props, State> {
         );
     }
 
-    private handleSubmit = async (ql: NewQuickLink) => {
+    private handleSubmit = async (ql: QuickLinkInterface) => {
         await putLink(ql, 2);
         await this.loadQuickLinks();
     };

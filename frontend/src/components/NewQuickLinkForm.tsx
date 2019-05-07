@@ -1,7 +1,7 @@
 import React from "react";
 import { ChipsInput } from "./ChipsInput";
 import { Modal } from "./Modal";
-import { QuickLink, NewQuickLink } from "../lib/api";
+import { QuickLink } from "../lib/api";
 
 interface State {
     newQuickLink: QuickLink;
@@ -12,7 +12,7 @@ interface Props {
     currentQuickLink?: QuickLink;
     toggleModal: (v: boolean) => void;
     isOpen: boolean;
-    handleSubmit: (ql: NewQuickLink) => Promise<void>;
+    handleSubmit: (ql: QuickLink) => Promise<void>;
 }
 
 const childSeparator = "~~";
@@ -20,7 +20,7 @@ const childSeparator = "~~";
 const blankQuickLink: QuickLink = {
     name: "",
     url: "",
-    children: new Map()
+    children: []
 };
 
 export class NewQuickLinkForm extends React.Component<Props, State> {
@@ -43,28 +43,17 @@ export class NewQuickLinkForm extends React.Component<Props, State> {
 
     private handleSubmit = async (): Promise<void> => {
         const { newQuickLink } = this.state;
-        const toSubmit: NewQuickLink = {
-            ...newQuickLink,
-            children: Array.from(newQuickLink.children.entries())
-        };
-        console.table(toSubmit);
         this.setState({ loading: true });
-        this.props.handleSubmit(toSubmit);
+        this.props.handleSubmit(newQuickLink);
         this.setState({ loading: false });
         this.props.toggleModal(false);
     };
 
     private handleSetChips = (children: string[]) => {
-        const childrenConverted = children.map(
-            (child: string): [string, string] => {
-                const childObj = child.split(childSeparator);
-                return [childObj[0], childObj[1]];
-            }
-        );
         this.setState({
             newQuickLink: {
                 ...this.state.newQuickLink,
-                children: new Map(childrenConverted)
+                children
             }
         });
     };
@@ -90,9 +79,7 @@ export class NewQuickLinkForm extends React.Component<Props, State> {
         );
         let chipsArray: string[] = [];
         if (this.state.newQuickLink.children) {
-            for (const [name, url] of this.state.newQuickLink.children) {
-                chipsArray.push(`${name}~~${url}`);
-            }
+            chipsArray = this.state.newQuickLink.children;
         }
         return (
             <Modal
@@ -131,7 +118,7 @@ export class NewQuickLinkForm extends React.Component<Props, State> {
                         <ChipsInput chips={chipsArray} onChange={this.handleSetChips} />
                     </div>
                     <p>
-            Input chips as <i>{`"name${childSeparator}url"`}</i>
+            Input chips as <i>{`"name${childSeparator}url"`}</i>. Press enter to save chip
                     </p>
                 </div>
             </Modal>

@@ -6,7 +6,7 @@ const http = axios.create({
 });
 
 export interface BaseBookmark {
-    title: string;
+    name: string;
     url: string;
     note: string;
     tags: string[];
@@ -30,8 +30,8 @@ export interface BaseQuickLink {
 }
 
 export interface QuickLink extends BaseQuickLink {
-    children: Map<string, string>;
-    [key: string]: Map<string, string> | string | undefined;
+    children: string[];
+    [key: string]: string[] | string | undefined;
 }
 
 export interface NewQuickLink extends BaseQuickLink {
@@ -75,12 +75,7 @@ export const getFavorites = (): Promise<Website[]> => {
 export const getQuickLinks = async (): Promise<QuickLink[]> => {
     try {
         const items = (await http.get("/link?type=2")).data;
-        return items.map((link: NewQuickLink) => {
-            return {
-                ...link,
-                children: new Map(link.children)
-            };
-        });
+        return items;
     } catch (e) {
         console.error(e);
         return [];
