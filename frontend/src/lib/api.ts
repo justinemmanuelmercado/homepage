@@ -39,15 +39,16 @@ export interface NewQuickLink extends BaseQuickLink {
 }
 
 export const deleteBookmarks = async (
-    items: ({ id: string; dateCreated: string } | undefined)[]
+    items: string[],
+    type: number
 ): Promise<boolean> => {
     try {
         let parameters = "";
-        items.forEach((item: { id: string; dateCreated: string } | undefined) => {
-            if (!item) return;
-            parameters += `ids[]=${item.id}&dates[]=${item.dateCreated}&`;
+        items.forEach((id: string) => {
+            if (!id) return;
+            parameters += `ids[]=${id}&`;
         });
-        await http.delete(`/link?${parameters}`);
+        await http.delete(`/link?${parameters}type=${type}`);
         return true;
     } catch (e) {
         return false;

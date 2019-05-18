@@ -80,7 +80,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                             >
                                 <FaPlus /> Tab
                             </button>
-                            <button onClick={() => this.handleEdit(bm)}className="is-small button">
+                            <button onClick={() => this.handleEdit(bm)} className="is-small button">
                                 <FaEdit />
                             </button>
                         </div>
@@ -157,14 +157,8 @@ export class BookmarksTable extends React.Component<Props, State> {
 
     private handleDelete = async (): Promise<void> => {
         this.toggleDeleteConfirm(false);
-        let items = this.props.bookmarks.map((val: Bookmark) => {
-            if (this.state.toDelete.includes(val.id)) {
-                return { dateCreated: val.dateCreated, id: val.id };
-            }
-        });
 
-        items = items.filter(Boolean);
-        await deleteBookmarks(items);
+        await deleteBookmarks(this.state.toDelete, 1);
         await this.props.loadBookmarks();
     };
 

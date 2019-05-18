@@ -1,15 +1,29 @@
 import Express from "express";
-import { deleteLinks } from "../db";
+import { Connection, Repository, Entity } from "typeorm";
+import { Bookmark } from "../entity/Bookmark";
+import { QuickLink } from "../entity/QuickLink";
+import { Link } from "../entity/Link";
 
-export const DeleteLinks = async (req: Express.Request, res: Express.Response) => {
-    const { ids, dates } = req.query;
+export const DeleteLinks = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
+    const { ids, type } = req.query;
+    console.log(type);
     try {
-        const response = await deleteLinks(ids, dates);
+        let query;
+        let repository:  Repository<any>;
+        if (type === 1) {
+            repository = await connection.getRepository(Bookmark);
+        } else {
+            repository = await connection.getRepository(QuickLink);
+        }
+        const toRemove = await repository.find(ids);
+        await repository.remove(toRemove);
+
         res.status(200);
         res.json({
-            body: response
+            body: `Successfully deleted`,
+            ids
         });
-    } catch(e) {
+    } catch (e) {
         res.status(500);
         res.json({
             body: e

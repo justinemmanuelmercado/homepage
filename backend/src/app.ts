@@ -27,7 +27,7 @@ export default async function () {
 
   app.get('/link', GetLinks(connection));
   app.put('/link', PutLink(connection));
-  app.delete('/link', DeleteLinks)
+  app.delete('/link', DeleteLinks(connection))
 
   return app;
 }
