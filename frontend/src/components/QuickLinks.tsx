@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPlus, FaEdit } from "react-icons/fa";
+import { FaPlus, FaTrash, FaTimes } from "react-icons/fa";
 import { QuickLink } from "./QuickLink";
 import { NewQuickLinkForm } from "./NewQuickLinkForm";
 import {
@@ -8,16 +8,18 @@ import {
     putLink
 } from "../lib/api";
 
-interface Props {}
+interface Props { }
 interface State {
     quickLinks: QuickLinkInterface[];
     modalOpen: boolean;
+    deleteMode: boolean;
 }
 
 export class QuickLinks extends React.Component<Props, State> {
     public state = {
         quickLinks: [],
-        modalOpen: false
+        modalOpen: false,
+        deleteMode: false
     };
 
     public async componentDidMount(): Promise<void> {
@@ -29,13 +31,18 @@ export class QuickLinks extends React.Component<Props, State> {
             <nav className="navbar">
                 <div className="navbar-menu">
                     {this.state.quickLinks.map((ql: QuickLinkInterface) => {
-                        return <QuickLink key={ql.url} link={ql} />;
+                        return <>
+                        <QuickLink key={ql.url} link={ql} />
+                        <a onClick={() => this.deleteQuickLink(ql)}>
+                            <FaTimes />
+                        </a>
+                        </>;
                     })}
                 </div>
                 <div className="navbar-end">
-                <div className="navbar-item">
-                        <button className="button" onClick={() => this.toggleModal(true)}>
-                            <FaEdit />
+                    <div className="navbar-item">
+                        <button className={`button ${this.state.deleteMode ? 'is-active' : ''}`} onClick={() => this.toggleDeleteMode()}>
+                            <FaTrash />
                         </button>
                     </div>
                     <div className="navbar-item">
@@ -51,6 +58,16 @@ export class QuickLinks extends React.Component<Props, State> {
                 />
             </nav>
         );
+    }
+
+    private deleteQuickLink = (ql: QuickLinkInterface) => {
+        console.log(ql);
+    }
+
+    private toggleDeleteMode = () => {
+        this.setState({
+            deleteMode: !this.state.deleteMode
+        })
     }
 
     private handleSubmit = async (ql: QuickLinkInterface) => {
