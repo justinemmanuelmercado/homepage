@@ -5,7 +5,8 @@ import { NewQuickLinkForm } from "./NewQuickLinkForm";
 import {
     getQuickLinks,
     QuickLink as QuickLinkInterface,
-    putLink
+    putLink,
+    deleteQuickLink
 } from "../lib/api";
 
 interface Props { }
@@ -31,17 +32,12 @@ export class QuickLinks extends React.Component<Props, State> {
             <nav className="navbar">
                 <div className="navbar-menu">
                     {this.state.quickLinks.map((ql: QuickLinkInterface) => {
-                        return <>
-                        <QuickLink key={ql.url} link={ql} />
-                        <a onClick={() => this.deleteQuickLink(ql)}>
-                            <FaTimes />
-                        </a>
-                        </>;
+                        return <QuickLink key={ql.url} link={ql} deleteMode={this.state.deleteMode} deleteQuickLink={this.deleteQuickLink} />;
                     })}
                 </div>
                 <div className="navbar-end">
                     <div className="navbar-item">
-                        <button className={`button ${this.state.deleteMode ? 'is-active' : ''}`} onClick={() => this.toggleDeleteMode()}>
+                        <button className={`button ${this.state.deleteMode ? 'is-active is-dark' : ''}`} onClick={() => this.toggleDeleteMode()}>
                             <FaTrash />
                         </button>
                     </div>
@@ -60,8 +56,9 @@ export class QuickLinks extends React.Component<Props, State> {
         );
     }
 
-    private deleteQuickLink = (ql: QuickLinkInterface) => {
-        console.log(ql);
+    private deleteQuickLink = async (ql: QuickLinkInterface) => {
+        await deleteQuickLink([ql]);
+        await this.loadQuickLinks();
     }
 
     private toggleDeleteMode = () => {

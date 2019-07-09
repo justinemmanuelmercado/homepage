@@ -5,3 +5,6 @@ build/
 tmp/
 temp/
 lib/
+docker-compose.yml
+Dockerfile
+ormconfig.js

@@ -1,17 +1,34 @@
 import React from "react";
 import { QuickLink as QuickLinkInterface } from "../lib/api";
+import { FaTimes } from "react-icons/fa";
 
 interface Props {
     link: QuickLinkInterface;
+    deleteMode: boolean;
+    deleteQuickLink: (ql: QuickLinkInterface) => void;
 }
 
 const childSeparator = "~~";
 
-export const QuickLink = (
+export const QuickLink = (props: Props) => {
+    return (
+        <span key={props.link.url}>
+            <InnerLink {...props} />
+        </span>
+    )
+}
+
+const InnerLink = (
     props: Props
 ): React.FunctionComponentElement<Props> => {
     const ql = props.link;
-    if (ql.children.length > 0) {
+    if (props.deleteMode) {
+        return <a onClick={() => props.deleteQuickLink(ql)} className="navbar-item">
+            <FaTimes />
+            {" "}
+            {ql.name}
+        </a>
+    } else if (ql.children.length > 0) {
         const childNodes = ql.children.map(
             (child: string): React.ReactElement => {
                 const [name, url] = child.split(childSeparator);

@@ -37,7 +37,7 @@ export const GetLinks = (connection: Connection) => async (req: Express.Request,
         res.status(200);
         res.json(links)
     } catch (e) {
-        res.status(e.statusCode);
+        res.status(500);
         res.json({
             body: e
         });

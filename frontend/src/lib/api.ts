@@ -31,6 +31,7 @@ export interface BaseQuickLink {
 
 export interface QuickLink extends BaseQuickLink {
     children: string[];
+    id: string;
     [key: string]: string[] | string | undefined;
 }
 
@@ -99,3 +100,20 @@ export const putLink = async (
         return false;
     }
 };
+
+export const deleteQuickLink = async (
+    links: QuickLink[]
+): Promise<boolean> => {
+    try {
+        let parameters = "";
+        links.forEach((ql: QuickLink) => {
+            if (!ql) return;
+            parameters += `ids[]=${ql.id}&type=2`;
+        });
+        await http.delete(`link?${parameters}`)
+        return false;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}

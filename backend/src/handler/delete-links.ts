@@ -2,7 +2,6 @@ import Express from "express";
 import { Connection, Repository, Entity } from "typeorm";
 import { Bookmark } from "../entity/Bookmark";
 import { QuickLink } from "../entity/QuickLink";
-import { Link } from "../entity/Link";
 
 export const DeleteLinks = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
     const { ids, type } = req.query;
@@ -10,12 +9,13 @@ export const DeleteLinks = (connection: Connection) => async (req: Express.Reque
     try {
         let query;
         let repository:  Repository<any>;
-        if (type === 1) {
+        if (type == 1) {
             repository = await connection.getRepository(Bookmark);
         } else {
             repository = await connection.getRepository(QuickLink);
         }
-        const toRemove = await repository.find(ids);
+        const toRemove = await repository.findByIds(ids);
+        console.log(ids, type);
         await repository.remove(toRemove);
 
         res.status(200);

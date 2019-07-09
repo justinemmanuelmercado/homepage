@@ -18,6 +18,7 @@ interface Props {
 const childSeparator = "~~";
 
 const blankQuickLink: QuickLink = {
+    id: "",
     name: "",
     url: "",
     children: []
