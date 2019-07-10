@@ -9,7 +9,7 @@
     "@types/react-dom": "16.8.2",
     "@types/react-helmet": "^5.0.8",
     "aws-sdk": "^2.427.0",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "bulma": "^0.7.4",
     "dotenv": "^7.0.0",
     "react": "^16.8.4",
@@ -67,5 +67,8 @@
       "./node_modules/.bin/eslint --max-warnings=0 --fix",
       "git add"
     ]
+  },
+  "resolutions": {
+    "react-router": "4.3.1"
   }
 }
