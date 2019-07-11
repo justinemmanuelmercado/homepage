@@ -1,6 +1,7 @@
 import React from "react";
 import { BaseBookmark } from "../lib/api";
 import { Modal } from "./Modal";
+import { ChipsInput } from "./ChipsInput";
 
 interface State {
     newBookmark: BaseBookmark;
@@ -24,7 +25,9 @@ const blankBookmark: BaseBookmark = {
 export class NewBookmarkForm extends React.Component<Props, State> {
     public state = {
         loading: false,
-        newBookmark: this.props.currentBookmark ? this.props.currentBookmark : blankBookmark
+        newBookmark: this.props.currentBookmark
+            ? this.props.currentBookmark
+            : blankBookmark
     };
 
     private handleInputChange = (
@@ -48,7 +51,6 @@ export class NewBookmarkForm extends React.Component<Props, State> {
         });
     };
 
-    
     private handleSubmit = async (): Promise<void> => {
         const { newBookmark } = this.state;
         this.setState({ loading: true });
@@ -56,9 +58,11 @@ export class NewBookmarkForm extends React.Component<Props, State> {
         this.setState({ loading: false });
         this.props.toggleModal(false);
     };
-    
 
     public render(): React.ReactElement {
+        const {
+            newBookmark: { tags }
+        } = this.state;
         if (!this.props.isOpen) return <></>;
         const footer = (
             <div>
@@ -119,6 +123,10 @@ export class NewBookmarkForm extends React.Component<Props, State> {
                                 className="textarea"
                             />
                         </div>
+                    </div>
+                    <div className="field">
+                        <label className="label">Tags</label>
+                        <ChipsInput chips={tags} onChange={this.handleSetChips} />
                     </div>
                 </div>
             </Modal>

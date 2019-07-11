@@ -2,16 +2,17 @@ import Express from "express";
 import { Connection } from "typeorm";
 import { QuickLink } from "../entity/QuickLink";
 import { Bookmark } from "../entity/Bookmark";
+import { BookmarkTag } from "../entity/BookmarkTags";
 // import { putLink } from "../db";
 
 async function putLink(body: any, connection: Connection) {
-    let newLink;
+    let newLink: Bookmark | QuickLink;
     if (body.type == 1) {
         newLink = new Bookmark();
         newLink.name = body.name;
         newLink.url = body.url;
         newLink.note = body.note;
-        newLink.tags = body.tags;
+
     } else if (body.type == 2) {
         newLink = new QuickLink();
         newLink.name = body.name;
@@ -20,7 +21,22 @@ async function putLink(body: any, connection: Connection) {
     } else {
         throw `invalid type: ${body.type}`
     }
-    await connection.manager.save(newLink);
+    const savedLink = await connection.manager.save(newLink);
+    if (body.tags.length > 0) {
+        let newTags: { tag: string, bookmarkId: string }[] = [];
+        newTags = body.tags.map((tag: string) => {
+            console.log({ tag, bookmarkId: savedLink.id });
+            return { tag, bookmarkId: savedLink.id }
+        })
+
+        await connection
+            .createQueryBuilder()
+            .insert()
+            .into(BookmarkTag)
+            .values(newTags)
+            .execute();
+
+    }
 }
 
 export const PutLink = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
