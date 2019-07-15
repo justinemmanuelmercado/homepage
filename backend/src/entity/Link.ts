@@ -1,8 +1,20 @@
-import { Column, CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, PrimaryColumn } from "typeorm";
 
+export interface LinkConstructorArgs {
+    id: string;
+    name: string;
+    url: string;
+}
 export class Link {
+    constructor(args: LinkConstructorArgs){
+        if(args){
+            this.id = args.id;
+            this.name = args.name;
+            this.url = args.url;
+        }
+    }
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryColumn('varchar')
     id!: string;
 
     @Column()

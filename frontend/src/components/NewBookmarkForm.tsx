@@ -1,21 +1,21 @@
 import React from "react";
-import { BaseBookmark } from "../lib/api";
+import { NewBookmark } from "../lib/api";
 import { Modal } from "./Modal";
 import { ChipsInput } from "./ChipsInput";
 
 interface State {
-    newBookmark: BaseBookmark;
+    newBookmark: NewBookmark;
     loading: boolean;
 }
 
 interface Props {
-    currentBookmark?: BaseBookmark;
-    handleSubmit: (newBookmark: BaseBookmark) => Promise<void>;
+    currentBookmark?: NewBookmark;
+    handleSubmit: (newBookmark: NewBookmark) => Promise<void>;
     toggleModal: (v: boolean) => void;
     isOpen: boolean;
 }
 
-const blankBookmark: BaseBookmark = {
+const blankBookmark: NewBookmark = {
     name: "",
     url: "",
     note: "",
@@ -60,9 +60,13 @@ export class NewBookmarkForm extends React.Component<Props, State> {
     };
 
     public render(): React.ReactElement {
-        const {
-            newBookmark: { tags }
-        } = this.state;
+        let bm;
+        if(this.props.currentBookmark) {
+            bm = this.props.currentBookmark;
+        } else {
+            bm = this.state.newBookmark;
+        }
+        console.log(this.state.newBookmark);
         if (!this.props.isOpen) return <></>;
         const footer = (
             <div>
@@ -93,7 +97,7 @@ export class NewBookmarkForm extends React.Component<Props, State> {
                         <label className="label">URL</label>
                         <div className="control">
                             <input
-                                value={this.state.newBookmark.url}
+                                value={bm.url}
                                 onChange={this.handleInputChange}
                                 id="url"
                                 className="input"
@@ -105,7 +109,7 @@ export class NewBookmarkForm extends React.Component<Props, State> {
                         <label className="label">Name</label>
                         <div className="control">
                             <input
-                                value={this.state.newBookmark.name}
+                                value={bm.name}
                                 onChange={this.handleInputChange}
                                 id="name"
                                 className="input"
@@ -117,7 +121,7 @@ export class NewBookmarkForm extends React.Component<Props, State> {
                         <label className="label">Note</label>
                         <div className="control">
                             <textarea
-                                value={this.state.newBookmark.note}
+                                value={bm.note}
                                 onChange={this.handleInputChange}
                                 id="note"
                                 className="textarea"
@@ -126,7 +130,7 @@ export class NewBookmarkForm extends React.Component<Props, State> {
                     </div>
                     <div className="field">
                         <label className="label">Tags</label>
-                        <ChipsInput chips={tags} onChange={this.handleSetChips} />
+                        <ChipsInput chips={bm.tags} onChange={this.handleSetChips} />
                     </div>
                 </div>
             </Modal>

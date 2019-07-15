@@ -7,11 +7,16 @@ async function getLinks(type: Number, connection: Connection) {
     let entity: ObjectType<Bookmark | QuickLink>;
     if (type === 1) {
         entity = Bookmark;
+        let repo = connection.getRepository(entity);
+        return await repo.createQueryBuilder('bookmark')
+                        .leftJoinAndSelect('bookmark.tags', 'tags')
+                        .getMany();
     } else {
         entity = QuickLink;
+        let repo = connection.getRepository(entity);
+        return await repo.find()
+
     }
-    let repo = connection.getRepository(entity);
-    return await repo.find()
 }
 
 
@@ -37,6 +42,7 @@ export const GetLinks = (connection: Connection) => async (req: Express.Request,
         res.status(200);
         res.json(links)
     } catch (e) {
+        console.error(e);
         res.status(500);
         res.json({
             body: e

@@ -1,18 +1,18 @@
-import { Entity, Column, ManyToMany, ObjectType, JoinColumn, PrimaryColumn } from "typeorm";
+import { Entity, ManyToOne, ObjectType, JoinColumn, PrimaryColumn } from "typeorm";
 import { Bookmark } from "./Bookmark";
 
 @Entity()
 export class BookmarkTag {
-    constructor(args: { tag: string, bookmark: Bookmark | string }) {
+    constructor(args: { tag: string, bookmarkId: string }) {
         if (args) {
             this.tag = args.tag;
-            this.bookmark = args.bookmark;
+            this.bookmarkId = args.bookmarkId;
         }
     }
     @PrimaryColumn('varchar')
     public tag!: string;
     
-    @ManyToMany((): ObjectType<Bookmark> => Bookmark)
+    @ManyToOne((): ObjectType<Bookmark> => Bookmark, user => user.tags)
     @JoinColumn()
     public bookmark!: Bookmark | string;
 

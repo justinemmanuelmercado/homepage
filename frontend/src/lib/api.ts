@@ -5,18 +5,29 @@ const http = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_ROOT
 });
 
+
+export interface BookmarkTag {
+    bookmarkId: string;
+    tag: string;
+}
+
 export interface BaseBookmark {
     name: string;
     url: string;
     note: string;
+}
+
+export interface NewBookmark extends BaseBookmark {
     tags: string[];
 }
 
+
 export interface Bookmark extends BaseBookmark {
-    id: string;
-    dateCreated: string;
-    type: number;
-    [key: string]: number | string | string[];
+    id?: string;
+    dateCreated?: string;
+    type?: number;
+    tags?: BookmarkTag[];
+    [key: string]: number | string | string[] | BookmarkTag[] | undefined;
 }
 
 export interface Website {

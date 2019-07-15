@@ -2,21 +2,27 @@ import Express from "express";
 import { Connection } from "typeorm";
 import { QuickLink } from "../entity/QuickLink";
 import { Bookmark } from "../entity/Bookmark";
-import { BookmarkTag } from "../entity/BookmarkTags";
+import { BookmarkTag } from "../entity/BookmarkTag";
 // import { putLink } from "../db";
+import uuidv4 from "uuid/v4";
 
 async function putLink(body: any, connection: Connection) {
     let newLink: Bookmark | QuickLink;
+    let linkId = uuidv4();
     if (body.type == 1) {
-        newLink = new Bookmark();
-        newLink.name = body.name;
-        newLink.url = body.url;
+        newLink = new Bookmark({
+            id: linkId,
+            name: body.name,
+            url: body.url
+        });
         newLink.note = body.note;
 
     } else if (body.type == 2) {
-        newLink = new QuickLink();
-        newLink.name = body.name;
-        newLink.url = body.url;
+        newLink = new QuickLink({
+            id: linkId,
+            name: body.name,
+            url: body.url
+        });
         newLink.children = body.children;
     } else {
         throw `invalid type: ${body.type}`

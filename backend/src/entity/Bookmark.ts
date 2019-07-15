@@ -1,11 +1,18 @@
-import { Column, Entity } from "typeorm";
-import { Link } from "./Link";
+import { Column, Entity, OneToMany, ObjectType } from "typeorm";
+import { Link, LinkConstructorArgs } from "./Link";
+import { BookmarkTag } from "./BookmarkTag";
+ 
+export interface BookmarkConstructorArgs extends LinkConstructorArgs {}
 
 @Entity()
 export class Bookmark extends Link {
+    constructor(args: BookmarkConstructorArgs){
+        super(args);
+    }
+
     @Column({ nullable: true })
     note: string = "";
 
-    @Column("simple-array", { nullable: true })
-    tags: string[] = [];
+    @OneToMany((): ObjectType<BookmarkTag> => BookmarkTag, bookmarkTag => bookmarkTag.bookmark)
+    public tags!: BookmarkTag[]
 }

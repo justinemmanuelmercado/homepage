@@ -2,7 +2,7 @@ import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { BookmarksTable } from "./BookmarksTable";
 import { NewBookmarkForm } from "./NewBookmarkForm";
-import { putLink, BaseBookmark, getBookmarks, Bookmark } from "../lib/api";
+import { putLink, BaseBookmark, getBookmarks, Bookmark, NewBookmark } from "../lib/api";
 
 interface State {
     bookmarks: Bookmark[];
@@ -119,14 +119,22 @@ export class Bookmarks extends React.Component<Props, State> {
         });
     };
 
-    private toggleModal = (val: boolean, bookmark?: BaseBookmark): void => {
+    private toggleModal = (val: boolean, bookmark?: Bookmark): void => {
         let newState;
         if(bookmark){
+            let editableBookmark: NewBookmark | Bookmark;
+            if(bookmark.tags){
+                editableBookmark = {
+                    ...bookmark,
+                    tags: bookmark.tags.map(tag => tag.tag)
+                };
+            } else {
+                editableBookmark = bookmark;
+            }
            newState = {
                modalOpen: val,
-               editableBookmark: bookmark
-           }
-           newState.editableBookmark = bookmark 
+               editableBookmark
+           } 
         } else {
             newState = {
                 modalOpen: val

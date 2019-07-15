@@ -1,9 +1,9 @@
 import React from "react";
 import { FaTrash, FaPlus, FaEdit } from "react-icons/fa";
 import { DeleteConfirm } from "../components/DeleteConfirm";
-import { Bookmark, deleteBookmarks, BaseBookmark } from "../lib/api";
+import { Bookmark, deleteBookmarks } from "../lib/api";
 interface Props {
-    toggleModal: (val: boolean, bookmark?: BaseBookmark) => void;
+    toggleModal: (val: boolean, bookmark?: Bookmark) => void;
     items: number;
     loadBookmarks: () => Promise<void>;
     bookmarks: Bookmark[];
@@ -61,7 +61,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                             type="checkbox"
                         />
                     </td>
-                    <td>{new Date(bm.dateCreated).toDateString()}</td>
+                    <td>{bm.dateCreated && new Date(bm.dateCreated).toDateString()}</td>
                     <td>
                         <a href={bm.url}>{bm.name}</a>
                     </td>
@@ -83,7 +83,16 @@ export class BookmarksTable extends React.Component<Props, State> {
                             <button onClick={() => this.handleEdit(bm)} className="is-small button">
                                 <FaEdit />
                             </button>
+                            <span>
+                                {bm.tags && bm.tags.map((tag, ind) => {
+                                    return (<span id={ind.toString()}>{tag.tag}</span>)
+                                })}
+                            </span>
                         </div>
+
+                    </td>
+                    <td>
+
                     </td>
                 </tr>
             );
@@ -135,11 +144,13 @@ export class BookmarksTable extends React.Component<Props, State> {
         window.open(url, "_self");
     }
 
-    private isChecked(id: string): boolean {
+    private isChecked(id?: string): boolean {
+        if (!id) return false;
         return this.state.toDelete.includes(id);
     }
 
-    private check(id: string): void {
+    private check(id?: string): void {
+        if (!id) return;
         const { toDelete } = this.state;
         const ind = toDelete.indexOf(id);
         if (ind < 0) {
@@ -225,6 +236,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                                 <FaTrash />
                             </button>
                         </th>
+                        <th />
                         <th />
                         <th />
                         <th />
