@@ -66,7 +66,6 @@ export class NewBookmarkForm extends React.Component<Props, State> {
         } else {
             bm = this.state.newBookmark;
         }
-        console.log(this.state.newBookmark);
         if (!this.props.isOpen) return <></>;
         const footer = (
             <div>

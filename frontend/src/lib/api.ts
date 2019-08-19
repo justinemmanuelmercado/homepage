@@ -95,6 +95,16 @@ export const getQuickLinks = async (): Promise<QuickLink[]> => {
     }
 };
 
+export const getTags = async (): Promise<BookmarkTag[]> => {
+    try {
+        const { tags } = (await http.get("/tags")).data;
+        return tags;
+    } catch(e) {
+        console.error(e);
+        return [];
+    }
+}
+
 export const putLink = async (
     link: Website | BaseBookmark | NewQuickLink,
     type: number

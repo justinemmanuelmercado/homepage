@@ -15,7 +15,7 @@ interface State {
     deleteConfirm: boolean;
 }
 
-const columnsCount = 5;
+const columnsCount = 6;
 
 export class BookmarksTable extends React.Component<Props, State> {
     public constructor(props: Props) {
@@ -83,16 +83,22 @@ export class BookmarksTable extends React.Component<Props, State> {
                             <button onClick={() => this.handleEdit(bm)} className="is-small button">
                                 <FaEdit />
                             </button>
-                            <span>
-                                {bm.tags && bm.tags.map((tag, ind) => {
-                                    return (<span id={ind.toString()}>{tag.tag}</span>)
-                                })}
-                            </span>
                         </div>
 
                     </td>
                     <td>
-
+                        <div style={{
+                            maxWidth: 300
+                        }}>
+                            {bm.tags && bm.tags.map((tag, ind) => {
+                                return (
+                                    <span key={ind}>
+                                        {" "}
+                                        <span className="chip-button" key={ind} id={ind.toString()}>{tag.tag}</span>
+                                    </span>
+                                )
+                            })}
+                        </div>
                     </td>
                 </tr>
             );
