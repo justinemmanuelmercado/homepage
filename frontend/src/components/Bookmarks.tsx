@@ -1,5 +1,4 @@
 import React from "react";
-import { FaSearch } from "react-icons/fa";
 import { BookmarksTable } from "./BookmarksTable";
 import { NewBookmarkForm } from "./NewBookmarkForm";
 import { putLink, BaseBookmark, getBookmarks, getTags, Bookmark, NewBookmark, BookmarkTag } from "../lib/api";
@@ -8,10 +7,7 @@ interface State {
     bookmarks: Bookmark[];
     loading: boolean;
     modalOpen: boolean;
-    query: string;
     editableBookmark?: BaseBookmark,
-    tags: BookmarkTag[];
-    tag: string;
 }
 interface Props { }
 export class Bookmarks extends React.Component<Props, State> {
@@ -27,43 +23,11 @@ export class Bookmarks extends React.Component<Props, State> {
 
     public async componentDidMount(): Promise<void> {
         const bookmarks = await getBookmarks();
-        const tags = await getTags();
         this.setState({
             bookmarks: bookmarks as Bookmark[],
             loading: false,
-            modalOpen: false,
-            tags
+            modalOpen: false
         });
-    }
-
-    private handleChangeQuery = (
-        evt: React.SyntheticEvent<HTMLInputElement>
-    ): void => {
-        this.setState({ query: evt.currentTarget.value });
-    };
-
-    private handleChangeTag = (evt: any) => {
-        this.setState({
-            tag: evt.currentTarget.value
-        });
-    }
-
-    private renderTags = (): React.ReactNode => {
-        const { tags, tag } = this.state;
-        if (tags.length > 0) {
-            return (
-                <div className="select">
-                    <select value={tag} onChange={this.handleChangeTag}>
-                        <option value="">All tags</option>
-                        {tags.map((tag: BookmarkTag) => {
-                            return <option value={tag.tag} key={tag.tag}>{tag.tag}</option>
-                        })}
-                    </select>
-                </div>
-            )
-        } else {
-            return <div className="select"><select></select></div>
-        }
     }
 
     public render(): React.ReactElement {
@@ -73,53 +37,17 @@ export class Bookmarks extends React.Component<Props, State> {
             </div>
         );
 
-        let { bookmarks, query } = this.state;
-        if (query && bookmarks.length > 0) {
-            bookmarks = bookmarks.filter((bookmark: Bookmark) => {
-                let match = false;
-                for (const key in bookmark as Bookmark) {
-                    if (typeof bookmark[key] !== "string") continue;
-                    const bookmarkAttr = (bookmark[key] as string).toLowerCase();
-                    if (bookmarkAttr.indexOf(query.toLowerCase()) !== -1) {
-                        match = true;
-                        break;
-                    }
-                }
-
-                return match;
-            });
-        }
+        let { bookmarks } = this.state;
 
         return (
             <div className="section">
                 <div className="container">
-                    <div className="columns">
-                        <div className="column">
-                            <div className="field">
-                                <div className="control has-icons-left">
-                                    <input
-                                        onChange={this.handleChangeQuery}
-                                        placeholder="Search..."
-                                        type="text"
-                                        value={this.state.query}
-                                        className="input"
-                                    />
-                                    <span className="icon is-small is-left">
-                                        <FaSearch />
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="column">
-                            {this.renderTags()}
-                        </div>
-                    </div>
                     {this.state.loading ? (
                         loading
                     ) : (
                             <BookmarksTable
                                 toggleModal={this.toggleModal}
-                                items={10}
+                                items={5}
                                 bookmarks={bookmarks}
                                 loadBookmarks={this.loadBookmarks}
                             />

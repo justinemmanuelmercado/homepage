@@ -11,6 +11,9 @@ export class Bookmark extends Link {
     }
 
     @Column({ nullable: true })
+    thumbnail: string = "";
+
+    @Column({ nullable: true })
     note: string = "";
 
     @OneToMany((): ObjectType<BookmarkTag> => BookmarkTag, bookmarkTag => bookmarkTag.bookmark)

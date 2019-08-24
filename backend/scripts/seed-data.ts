@@ -6,7 +6,8 @@ import { QuickLink } from "../src/entity/QuickLink";
 import { Bookmark } from "../src/entity/Bookmark";
 import { BookmarkTag } from "../src/entity/BookmarkTag"
 import uuidv4 from "uuid/v4";
-import { internet, hacker } from "faker";
+import { internet, hacker, random } from "faker";
+import { randomBytes } from 'crypto';
 
 class DatabaseSeeder {
     private connection: Connection;
@@ -67,6 +68,9 @@ class DatabaseSeeder {
                 name: hacker.noun(),
                 url: internet.url()
             })
+            bm.note = random.words(15);
+            bm.thumbnail = random.image();
+            
             bmPromises.push(bmRepository.save(bm));
             while (tagCount < 10) {
                 const bmTag = new BookmarkTag({

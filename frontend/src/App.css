@@ -20,16 +20,16 @@
     border-color: transparent;
 }
 
-.bookmark-tags {
-    background-color: gray;
-    border: 0;
-    border-radius: 1rem;
-    margin: 0.1rem 0.1rem;
-    padding: 0.2rem 0.8rem;
-    hyphens: none;
-}
 
 .tags-holder {
     white-space: normal;
     width: 14rem;
+}
+
+.bookmark-tag {
+    background-color: #e5e5e5;;
+    border: 0;
+    border-radius: 0.2rem;
+    margin: 0.1rem 0.1rem;
+    padding: 0.1rem 0.4rem;
 }

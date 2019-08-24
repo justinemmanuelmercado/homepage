@@ -11,6 +11,7 @@
     "aws-sdk": "^2.501.0",
     "axios": "^0.19.0",
     "bulma": "^0.7.5",
+    "css-reset-and-normalize": "^2.1.0",
     "dotenv": "^7.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -20,9 +21,6 @@
     "react-scripts": "2.1.8",
     "react-typography": "^0.16.19",
     "typescript": "3.3.3333",
-    "typography": "^0.16.19",
-    "typography-theme-moraga": "^0.16.19",
-    "typography-theme-stern-grove": "^0.16.19",
     "validator": "^10.11.0"
   },
   "scripts": {

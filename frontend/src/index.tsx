@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "bulma/css/bulma.css";
+import "css-reset-and-normalize/css/reset-and-normalize.min.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 

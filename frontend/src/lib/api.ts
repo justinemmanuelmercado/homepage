@@ -15,6 +15,7 @@ export interface BaseBookmark {
     name: string;
     url: string;
     note: string;
+    thumbnail?: string;
 }
 
 export interface NewBookmark extends BaseBookmark {
