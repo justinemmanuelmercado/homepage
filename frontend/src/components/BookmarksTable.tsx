@@ -151,12 +151,11 @@ export class BookmarksTable extends React.Component<Props, State> {
                     <div className="card-content">
                         <div className="media is-marginless">
                             <div className="media-left">
-                                {bm.thumbnail && <div className="media-left">
+                                <div className="media-left">
                                     <figure className="is-marginless image is-64x64">
-                                        <img src={bm.thumbnail ? bm.thumbnail : "https://placeholder.com/150"} alt="Link thumbnail" />
+                                        <img src={bm.thumbnail ? bm.thumbnail : "https://via.placeholder.com/150"} alt="Link thumbnail" />
                                     </figure>
                                 </div>
-                                }
                             </div>
                             <div className="media-content">
                                 <div className="content">
