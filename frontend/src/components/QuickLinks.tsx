@@ -72,7 +72,7 @@ export class QuickLinks extends React.Component<Props, State> {
                         </div>
                     </div>
 
-                    <div className="is-flex" style={{
+                    {maxPage > 0 && <div className="is-flex" style={{
                         flexDirection: "column"
                     }}>
                         <div className="navbar-item">
@@ -86,7 +86,7 @@ export class QuickLinks extends React.Component<Props, State> {
                             </button>
                         </div>
 
-                    </div>
+                    </div>}
                 </div>
                 <div className="is-inline-flex">
                     {filteredQuickLinks.map((ql: QuickLinkInterface) => {

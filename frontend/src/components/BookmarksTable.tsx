@@ -153,7 +153,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                             <div className="media-left">
                                 {bm.thumbnail && <div className="media-left">
                                     <figure className="is-marginless image is-64x64">
-                                        <img src={bm.thumbnail} alt="Link thumbnail" />
+                                        <img src={bm.thumbnail ? bm.thumbnail : "https://placeholder.com/150"} alt="Link thumbnail" />
                                     </figure>
                                 </div>
                                 }
@@ -162,7 +162,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                                 <div className="content">
                                     <p>
                                         <strong>{bm.name}</strong>
-                                        <small style={{ marginLeft: "1rem" }}><a href={bm.url}>{bm.url}</a></small>
+                                        <small style={{ marginLeft: "1rem" }}><a href={bm.url}>{this.truncateText(bm.url, 50)}</a></small>
                                         <br />
                                         {bm.note}
                                     </p>
@@ -178,6 +178,14 @@ export class BookmarksTable extends React.Component<Props, State> {
 
             );
         });
+    }
+
+    private truncateText = (text: string, length: number = 50): string => {
+        if(text.length < length) {
+            return text;
+        }
+
+        return `${text.substring(0, length)}...`
     }
 
     private handleEdit = (bookmark: Bookmark) => {
