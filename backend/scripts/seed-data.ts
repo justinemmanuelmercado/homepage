@@ -56,11 +56,12 @@ class DatabaseSeeder {
         const bmRepository = await this.connection.getRepository(Bookmark);
         const bmTagRepository = await this.connection.getRepository(BookmarkTag);
 
-        let bmCount = 0, qlCount = 0;
+        let bmCount = 0, qlCount = 0, maxBm = 100, maxQl = 20;
         let bmPromises: Promise<Bookmark>[] = [];
         let bmTagPromises: Promise<BookmarkTag>[] = [];
+        let qlPromises: Promise<QuickLink>[] = [];
 
-        while (bmCount < 50) {
+        while (bmCount < maxBm) {
             let tagCount = 0;
             const id = uuidv4();
             const bm = new Bookmark({
@@ -83,6 +84,20 @@ class DatabaseSeeder {
             bmCount++;
         }
 
+        while (qlCount < maxQl) {
+            const id = uuidv4();
+            const ql = new QuickLink({
+                id,
+                name: hacker.noun(),
+                url: internet.url()
+            })
+
+            qlPromises.push(qlRepository.save(ql));
+            qlCount++;
+
+        }
+
+        const savedQuickLinks = await Promise.all(qlPromises);
         const savedBookmarks = await Promise.all(bmPromises);
         const savedBmTags = await Promise.all(bmTagPromises);
 

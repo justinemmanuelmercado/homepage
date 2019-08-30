@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTrash, FaPlus, FaEdit, FaSearch } from "react-icons/fa";
+import { FaTrash, FaAngleLeft, FaAngleRight, FaPlus, FaEdit, FaSearch } from "react-icons/fa";
 import { DeleteConfirm } from "../components/DeleteConfirm";
 import { Bookmark, deleteBookmarks, getTags, BookmarkTag } from "../lib/api";
 interface Props {
@@ -17,8 +17,6 @@ interface State {
     tag: string;
     tags: BookmarkTag[];
 }
-
-const columnsCount = 6;
 
 export class BookmarksTable extends React.Component<Props, State> {
     public constructor(props: Props) {
@@ -49,7 +47,7 @@ export class BookmarksTable extends React.Component<Props, State> {
         const { tags, tag } = this.state;
         if (tags.length > 0) {
             return (
-                <div className="select">
+                <div className="select is-fullwidth">
                     <select value={tag} onChange={this.handleChangeTag}>
                         <option value="">All tags</option>
                         {tags.map((tag: BookmarkTag) => {
@@ -70,7 +68,7 @@ export class BookmarksTable extends React.Component<Props, State> {
         if ((query || tag) && bookmarks.length > 0) {
             bookmarks = bookmarks.filter((bookmark: Bookmark) => {
                 let matchQuery = false;
-                let matchTag = false; 
+                let matchTag = false;
                 for (const key in bookmark as Bookmark) {
                     if (typeof bookmark[key] !== "string") continue;
                     const bookmarkAttr = (bookmark[key] as string).toLowerCase();
@@ -203,9 +201,9 @@ export class BookmarksTable extends React.Component<Props, State> {
             }
         }
 
-        return (<nav className="pagination is-small">
-            <a className="pagination-previous" onClick={() => goToPage(this.state.currentPage - 1)}>Previous</a>
-            <a className="pagination-next" onClick={() => goToPage(this.state.currentPage + 1)}>Next page</a>
+        return (<nav className="pagination is-small is-right">
+            <a className="pagination-previous" onClick={() => goToPage(this.state.currentPage - 1)}><FaAngleLeft /></a>
+            <a className="pagination-next" onClick={() => goToPage(this.state.currentPage + 1)}><FaAngleRight /></a>
             <ul className="pagination-list">
                 {Array.from(Array(this.renderMaxPage(bookmarksLength)).keys()).map(num => {
                     if (num === this.state.currentPage) {
@@ -283,8 +281,16 @@ export class BookmarksTable extends React.Component<Props, State> {
                     </div>
                 </div>
             </div>
-            <div className="column">
-                {this.renderTags()}
+            <div className="column columns">
+                <div className="column">
+                    {this.renderTags()}
+                </div>
+                <div className="column">
+
+                    <button className="button is-fullwidth">
+                        Add Bookmark
+                </button>
+                </div>
             </div>
         </div>
     }
@@ -300,6 +306,7 @@ export class BookmarksTable extends React.Component<Props, State> {
 
     private handleChangeTag = (evt: any) => {
         this.setState({
+            currentPage: 0,
             tag: evt.currentTarget.value
         });
     }

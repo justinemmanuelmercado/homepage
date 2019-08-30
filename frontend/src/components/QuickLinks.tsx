@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPlus, FaTrash, FaTimes } from "react-icons/fa";
+import { FaPlus, FaTrash, FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { QuickLink } from "./QuickLink";
 import { NewQuickLinkForm } from "./NewQuickLinkForm";
 import {
@@ -14,13 +14,18 @@ interface State {
     quickLinks: QuickLinkInterface[];
     modalOpen: boolean;
     deleteMode: boolean;
+    currentPage: number;
+    items: number;
 }
 
+const MAX_ITEMS = 10;
 export class QuickLinks extends React.Component<Props, State> {
     public state = {
         quickLinks: [],
         modalOpen: false,
-        deleteMode: false
+        deleteMode: false,
+        items: MAX_ITEMS,
+        currentPage: 0
     };
 
     public async componentDidMount(): Promise<void> {
@@ -28,24 +33,65 @@ export class QuickLinks extends React.Component<Props, State> {
     }
 
     public render(): React.ReactElement {
+        let { quickLinks, currentPage, items } = this.state;
+        const start = currentPage * items;
+        const end = start + items;
+        const length = quickLinks.length;
+        const maxPage = Math.ceil(length / items) - 1
+        const filteredQuickLinks = quickLinks.slice(start, end);
+
+        console.log(currentPage, maxPage);
+
+        const goToPage = (page: number): void => {
+            if (page < 0 || page > maxPage) return;
+            {
+                this.setState({
+                    currentPage: page
+                });
+            }
+        }
+
         return (
-            <nav className="navbar">
-                <div className="navbar-menu">
-                    {this.state.quickLinks.map((ql: QuickLinkInterface) => {
+            <nav className="navbar is-inline-flex is-fullwidth" style={{
+                alignItems: "center",
+                justifyContent: "space-between"
+            }}>
+                <div className="is-inline-flex">
+                    <div className="is-flex" style={{
+                        flexDirection: "column"
+                    }}>
+                        <div className="navbar-item">
+                            <button className={`button is-small ${this.state.deleteMode ? 'is-active is-dark' : ''}`} onClick={() => this.toggleDeleteMode()}>
+                                <FaTrash />
+                            </button>
+                        </div>
+                        <div className="navbar-item">
+                            <button className="button is-small" onClick={() => this.toggleModal(true)}>
+                                <FaPlus />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="is-flex" style={{
+                        flexDirection: "column"
+                    }}>
+                        <div className="navbar-item">
+                            <button className="button is-small" disabled={currentPage === 0} onClick={() => goToPage(currentPage - 1)}>
+                                <FaAngleUp />
+                            </button>
+                        </div>
+                        <div className="navbar-item">
+                            <button className="button is-small" disabled={currentPage === maxPage} onClick={() => goToPage(currentPage + 1)}>
+                                <FaAngleDown />
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                <div className="is-inline-flex">
+                    {filteredQuickLinks.map((ql: QuickLinkInterface) => {
                         return <QuickLink key={ql.url} link={ql} deleteMode={this.state.deleteMode} deleteQuickLink={this.deleteQuickLink} />;
                     })}
-                </div>
-                <div className="navbar-end">
-                    <div className="navbar-item">
-                        <button className={`button ${this.state.deleteMode ? 'is-active is-dark' : ''}`} onClick={() => this.toggleDeleteMode()}>
-                            <FaTrash />
-                        </button>
-                    </div>
-                    <div className="navbar-item">
-                        <button className="button" onClick={() => this.toggleModal(true)}>
-                            <FaPlus />
-                        </button>
-                    </div>
                 </div>
                 <NewQuickLinkForm
                     isOpen={this.state.modalOpen}
