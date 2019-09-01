@@ -2,6 +2,7 @@ import React from "react";
 import { FaTrash, FaAngleLeft, FaAngleRight, FaPlus, FaEdit, FaSearch } from "react-icons/fa";
 import { DeleteConfirm } from "../components/DeleteConfirm";
 import { Bookmark, deleteBookmarks, getTags, BookmarkTag } from "../lib/api";
+import { BookmarkRow } from "./BookmarkRow";
 interface Props {
     toggleModal: (val: boolean, bookmark?: Bookmark) => void;
     items: number;
@@ -103,88 +104,13 @@ export class BookmarksTable extends React.Component<Props, State> {
 
         return rows.map((bm: Bookmark) => {
             return (
-                <div key={bm.id} style={{
-                    marginTop: "1em"
-                }} className="card mt-3">
-                    <header className="is-flex">
-                        <div style={{
-                            width: "100%",
-                            justifyContent: "space-between",
-                            alignItems: "center"
-                        }} className="is-flex">
-                            <div style={{
-                                justifyContent: "flex-start",
-                                alignItems: "center"
-                            }} className="is-flex">
-                                {bm.tags && bm.tags.map((tag, ind) => {
-                                    return (
-                                        <small className="bookmark-tag"
-                                            key={ind}
-                                            id={ind.toString()}>{tag.tag}  {" "}</small>
-                                    )
-                                })}
-                            </div>
-                            <div style={{
-                                justifyContent: "flex-end",
-                                alignItems: "center"
-                            }} className="is-flex">
-                                <div>
-                                    <button
-                                        onClick={() => this.redirect(bm.url)}
-                                        className="is-small button"
-                                    >
-                                        Open
-                            </button>
-                                    <button
-                                        onClick={() => this.redirect(bm.url, true)}
-                                        className="is-small button"
-                                    >
-                                        <FaPlus /> Tab
-                            </button>
-                                    <button onClick={() => this.handleEdit(bm)} className="is-small button">
-                                        <FaEdit />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-                    <div className="card-content">
-                        <div className="media is-marginless">
-                            <div className="media-left">
-                                <div className="media-left">
-                                    <figure className="is-marginless image is-64x64">
-                                        <img src={bm.thumbnail ? bm.thumbnail : "https://via.placeholder.com/150"} alt="Link thumbnail" />
-                                    </figure>
-                                </div>
-                            </div>
-                            <div className="media-content">
-                                <div className="content">
-                                    <p>
-                                        <strong>{bm.name}</strong>
-                                        <small style={{ marginLeft: "1rem" }}><a href={bm.url}>{this.truncateText(bm.url, 50)}</a></small>
-                                        <br />
-                                        {bm.note}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="media-right">
-                                <time>{bm.dateCreated && new Date(bm.dateCreated).toDateString()}</time>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
+                <BookmarkRow bm={bm}
+                onFinish={this.props.loadBookmarks}
+                    key={bm.id} 
+                    check={this.check} 
+                    checked={this.isChecked(bm.id)} />
             );
         });
-    }
-
-    private truncateText = (text: string, length: number = 50): string => {
-        if(text.length < length) {
-            return text;
-        }
-
-        return `${text.substring(0, length)}...`
     }
 
     private handleEdit = (bookmark: Bookmark) => {
@@ -209,6 +135,16 @@ export class BookmarksTable extends React.Component<Props, State> {
         }
 
         return (<nav className="pagination is-small is-right">
+            <button
+                disabled={this.state.toDelete.length <= 0}
+                onClick={() => this.toggleDeleteConfirm(true)}
+                style={{
+                    borderColor: "transparent"
+                }}
+                className="button"
+            >
+                <FaTrash />
+            </button>
             <a className="pagination-previous" onClick={() => goToPage(this.state.currentPage - 1)}><FaAngleLeft /></a>
             <a className="pagination-next" onClick={() => goToPage(this.state.currentPage + 1)}><FaAngleRight /></a>
             <ul className="pagination-list">
@@ -232,21 +168,12 @@ export class BookmarksTable extends React.Component<Props, State> {
         );
     }
 
-    private redirect(url: string, tab?: boolean): void {
-        if (tab) {
-            window.open(url, "_blank");
-            return;
-        }
-
-        window.open(url, "_self");
-    }
-
-    private isChecked(id?: string): boolean {
+    private isChecked = (id?: string): boolean => {
         if (!id) return false;
         return this.state.toDelete.includes(id);
     }
 
-    private check(id?: string): void {
+    private check = (id?: string): void => {
         if (!id) return;
         const { toDelete } = this.state;
         const ind = toDelete.indexOf(id);
@@ -294,7 +221,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                 </div>
                 <div className="column">
 
-                    <button className="button is-fullwidth">
+                    <button className="button is-fullwidth" onClick={() => this.props.toggleModal(true)}>
                         Add Bookmark
                 </button>
                 </div>
@@ -322,6 +249,11 @@ export class BookmarksTable extends React.Component<Props, State> {
         const rows = this.getFilteredRows();
         return (
             <div className="container">
+                <DeleteConfirm
+                    isOpen={this.state.deleteConfirm}
+                    onCancel={() => this.toggleDeleteConfirm(false)}
+                    onConfirm={this.handleDelete}
+                />
                 <div className="column">
                     {this.renderFilters()}
                     {this.renderPageNumbers(rows.length)}

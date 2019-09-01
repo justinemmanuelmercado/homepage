@@ -33,6 +33,8 @@ export class NewBookmarkForm extends React.Component<Props, State> {
     private handleInputChange = (
         evt: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
+        console.log(this.state);
+
         const newBm = {
             ...this.state.newBookmark,
             [evt.currentTarget.id]: evt.currentTarget.value
@@ -60,12 +62,7 @@ export class NewBookmarkForm extends React.Component<Props, State> {
     };
 
     public render(): React.ReactElement {
-        let bm;
-        if(this.props.currentBookmark) {
-            bm = this.props.currentBookmark;
-        } else {
-            bm = this.state.newBookmark;
-        }
+        let bm = this.state.newBookmark;
         if (!this.props.isOpen) return <></>;
         const footer = (
             <div>

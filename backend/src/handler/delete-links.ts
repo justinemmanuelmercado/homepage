@@ -15,7 +15,6 @@ export const DeleteLinks = (connection: Connection) => async (req: Express.Reque
             repository = await connection.getRepository(QuickLink);
         }
         const toRemove = await repository.findByIds(ids);
-        console.log(ids, type);
         await repository.remove(toRemove);
 
         res.status(200);

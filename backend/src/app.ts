@@ -8,6 +8,7 @@ import { DeleteLinks } from "./handler/delete-links";
 import { GetLinks } from "./handler/get-links";
 import { PutLink } from "./handler/put-link";
 import { GetTags } from "./handler/get-tags";
+import { PutLinkEdit } from "./handler/put-link-edit";
 
 AWS.config.update({ region: process.env.AWS_REGION || "us-east-1" });
 
@@ -28,6 +29,7 @@ export default async function () {
 
   app.get('/link', GetLinks(connection));
   app.put('/link', PutLink(connection));
+  app.put('/link/:id', PutLinkEdit(connection));
   app.delete('/link', DeleteLinks(connection));
   app.get('/tags', GetTags(connection));
 

@@ -40,8 +40,6 @@ export class QuickLinks extends React.Component<Props, State> {
         const maxPage = Math.ceil(length / items) - 1
         const filteredQuickLinks = quickLinks.slice(start, end);
 
-        console.log(currentPage, maxPage);
-
         const goToPage = (page: number): void => {
             if (page < 0 || page > maxPage) return;
             {

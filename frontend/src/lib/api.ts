@@ -12,6 +12,7 @@ export interface BookmarkTag {
 }
 
 export interface BaseBookmark {
+    id?: string;
     name: string;
     url: string;
     note: string;
@@ -24,7 +25,6 @@ export interface NewBookmark extends BaseBookmark {
 
 
 export interface Bookmark extends BaseBookmark {
-    id?: string;
     dateCreated?: string;
     type?: number;
     tags?: BookmarkTag[];
@@ -139,3 +139,20 @@ export const deleteQuickLink = async (
         return false;
     }
 }
+
+export const putLinkEdit = async (
+    link: NewBookmark,
+    type: number
+): Promise<boolean> => {
+    try {
+        const newLink = {
+            ...link,
+            type
+        };
+        await http.put(`/link/${link.id}`, newLink);
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+};

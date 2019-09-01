@@ -69,9 +69,6 @@ export class Bookmarks extends React.Component<Props, State> {
     };
 
     private loadBookmarks = async () => {
-        this.setState({
-            loading: true
-        });
         const bookmarks = await getBookmarks();
         this.setState({
             bookmarks: bookmarks as Bookmark[],
