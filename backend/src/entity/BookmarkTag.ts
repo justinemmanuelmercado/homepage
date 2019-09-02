@@ -12,7 +12,7 @@ export class BookmarkTag {
     @PrimaryColumn('varchar')
     public tag!: string;
     
-    @ManyToOne((): ObjectType<Bookmark> => Bookmark, user => user.tags, { onDelete: 'CASCADE' })
+    @ManyToOne((): ObjectType<Bookmark> => Bookmark, bookmark => bookmark.tags, { onDelete: 'CASCADE' })
     @JoinColumn()
     public bookmark!: Bookmark | string;
 

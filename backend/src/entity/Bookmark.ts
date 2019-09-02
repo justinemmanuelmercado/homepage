@@ -17,5 +17,5 @@ export class Bookmark extends Link {
     note: string = "";
 
     @OneToMany((): ObjectType<BookmarkTag> => BookmarkTag, bookmarkTag => bookmarkTag.bookmark,  { onDelete: 'CASCADE' })
-    public tags!: BookmarkTag[]
+    public tags!: BookmarkTag[];
 }
