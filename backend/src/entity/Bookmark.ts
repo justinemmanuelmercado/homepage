@@ -16,6 +16,6 @@ export class Bookmark extends Link {
     @Column({ nullable: true })
     note: string = "";
 
-    @OneToMany((): ObjectType<BookmarkTag> => BookmarkTag, bookmarkTag => bookmarkTag.bookmark)
+    @OneToMany((): ObjectType<BookmarkTag> => BookmarkTag, bookmarkTag => bookmarkTag.bookmark,  { onDelete: 'CASCADE' })
     public tags!: BookmarkTag[]
 }

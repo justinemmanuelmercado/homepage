@@ -33,7 +33,6 @@ export class NewBookmarkForm extends React.Component<Props, State> {
     private handleInputChange = (
         evt: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
-        console.log(this.state);
 
         const newBm = {
             ...this.state.newBookmark,
