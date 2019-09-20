@@ -1,7 +1,8 @@
 import React from "react";
-import { NewBookmark } from "../lib/api";
+import { NewBookmark, getBookmarks } from "../lib/api";
 import { Modal } from "./Modal";
 import { ChipsInput } from "./ChipsInput";
+import AwesomeDebouncePromise from "awesome-debounce-promise";
 
 interface State {
     newBookmark: NewBookmark;
@@ -19,6 +20,7 @@ const blankBookmark: NewBookmark = {
     name: "",
     url: "",
     note: "",
+    thumbnail: "",
     tags: []
 };
 
@@ -42,6 +44,21 @@ export class NewBookmarkForm extends React.Component<Props, State> {
             newBookmark: newBm
         });
     };
+
+    private handleUrlChange = async (
+        evt: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const debounced = AwesomeDebouncePromise(getBookmarks, 1000);
+        const value = await debounced();
+        console.log(value);
+        // this.handleInputChange(evt);
+        this.setState({
+            newBookmark: {
+                ...this.state.newBookmark,
+                url: evt.currentTarget.value
+            }
+        })
+    }
 
     private handleSetChips = (tags: string[]) => {
         this.setState({
@@ -70,14 +87,14 @@ export class NewBookmarkForm extends React.Component<Props, State> {
                     onClick={this.handleSubmit}
                     className={`button ${this.state.loading && "is-loading"}`}
                 >
-          Save
+                    Save
                 </button>
                 <button
                     disabled={this.state.loading}
                     onClick={() => this.props.toggleModal(false)}
                     className={`button ${this.state.loading && "is-loading"}`}
                 >
-          Cancel
+                    Cancel
                 </button>
             </div>
         );
@@ -88,28 +105,49 @@ export class NewBookmarkForm extends React.Component<Props, State> {
                 title={"Bookmark"}
             >
                 <div className="form">
-                    <div className="field">
-                        <label className="label">URL</label>
-                        <div className="control">
-                            <input
-                                value={bm.url}
-                                onChange={this.handleInputChange}
-                                id="url"
-                                className="input"
-                                type="website"
-                            />
+                    <div className="columns">
+                        <div className="column">
+                            <figure className="is-marginless image is-128x128">
+                                <img src={bm.thumbnail ? bm.thumbnail : "https://via.placeholder.com/150"} alt="Link thumbnail" />
+                            </figure>
+                            <div className="field">
+                                <div className="control">
+                                    <input
+                                        disabled={true}
+                                        value={bm.thumbnail}
+                                        onChange={this.handleInputChange}
+                                        id="thumbnail"
+                                        className="input"
+                                        type="text"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div className="field">
-                        <label className="label">Name</label>
-                        <div className="control">
-                            <input
-                                value={bm.name}
-                                onChange={this.handleInputChange}
-                                id="name"
-                                className="input"
-                                type="text"
-                            />
+                        <div className="column">
+                            <div className="field">
+                                <label className="label">URL</label>
+                                <div className="control">
+                                    <input
+                                        value={bm.url}
+                                        onChange={this.handleUrlChange}
+                                        id="url"
+                                        className="input"
+                                        type="website"
+                                    />
+                                </div>
+                            </div>
+                            <div className="field">
+                                <label className="label">Name</label>
+                                <div className="control">
+                                    <input
+                                        value={bm.name}
+                                        onChange={this.handleInputChange}
+                                        id="name"
+                                        className="input"
+                                        type="text"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="field">
