@@ -23,7 +23,8 @@ export default async function () {
 
   app.get('/', (req, res) => {
     res.json({
-      message: "congrats"
+      message: "congrats",
+      name: connection.name
     })
   });
 

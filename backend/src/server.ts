@@ -4,7 +4,11 @@ dotenv.config();
 import app from "./app";
 const port = process.env.PORT || 3000;
 
-app().then(app => {
-    app.listen(port);
-    console.log(`listening on http://localhost:${port}`);
-})
+app()
+    .then(app => {
+        app.listen(port);
+        console.log(`listening on http://localhost:${port}`);
+    })
+    .catch(err => {
+        console.error(err);
+    })
