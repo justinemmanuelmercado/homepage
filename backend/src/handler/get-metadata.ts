@@ -9,7 +9,6 @@ import fetch from "node-fetch";
 export const GetMetadata = {
     get: async (req: Request, res: Response) => {
         const url = req.params[0];
-        console.log(url);
         try {
             if (GetMetadata.validator(url)) {
                 const metadata = await GetMetadata.scrape(url);

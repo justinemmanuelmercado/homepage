@@ -22,7 +22,7 @@
     "react-scripts": "2.1.8",
     "react-typography": "^0.16.19",
     "typescript": "3.3.3333",
-    "validator": "^10.11.0"
+    "validator": "^11.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,6 +43,7 @@
   "devDependencies": {
     "@types/react-router": "^4.4.5",
     "@types/typography": "^0.16.2",
+    "@types/validator": "^10.11.3",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "eslint": "5.12.0",

@@ -7,7 +7,7 @@ interface BookmarkRowProps {
     bm: Bookmark;
     check: (id: string | undefined) => void;
     checked: boolean;
-    key: any;
+    key: string;
     onFinish: () => Promise<void>;
 }
 
@@ -18,87 +18,113 @@ const redirect = (url: string, tab?: boolean): void => {
     }
 
     window.open(url, "_self");
-}
+};
 
 const truncateText = (text: string, length: number = 50): string => {
     if (text.length < length) {
         return text;
     }
 
-    return `${text.substring(0, length)}...`
-}
+    return `${text.substring(0, length)}...`;
+};
 
-export const BookmarkRow = (props: BookmarkRowProps) => {
+export const BookmarkRow = (props: BookmarkRowProps): React.ReactElement => {
     const { bm } = props;
     const [modalOpened, setModalOpened] = useState(false);
     let editableBookmark: NewBookmark | Bookmark;
     if (bm.tags) {
         editableBookmark = {
             ...bm,
-            tags: bm.tags.map(tag => tag.tag)
+            tags: bm.tags.map((tag): string => tag.tag)
         };
     } else {
         editableBookmark = bm;
     }
 
-    const submit = async (newBookmark: NewBookmark) => {
+    const submit = async (newBookmark: NewBookmark): Promise<void> => {
         await putLinkEdit(newBookmark, 1);
         await props.onFinish();
     };
-
+    console.log(bm, "LOOKY");
     return (
-        <div key={bm.id} style={{
-            marginTop: "1em"
-        }} className="card mt-3">
-            {
-                modalOpened && <NewBookmarkForm 
-                                    currentBookmark={editableBookmark as NewBookmark}
-                                    isOpen={modalOpened}
-                                    toggleModal={setModalOpened}
-                                    handleSubmit={submit}
-                                    />
-            }
+        <div
+            key={bm.id}
+            style={{
+                marginTop: "1em"
+            }}
+            className="card mt-3"
+        >
+            {modalOpened && (
+                <NewBookmarkForm
+                    currentBookmark={editableBookmark as NewBookmark}
+                    isOpen={modalOpened}
+                    toggleModal={setModalOpened}
+                    handleSubmit={submit}
+                />
+            )}
             <header className="is-flex">
-                <div style={{
-                    width: "100%",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                }} className="is-flex">
-                    <div style={{
-                        justifyContent: "flex-start",
+                <div
+                    style={{
+                        width: "100%",
+                        justifyContent: "space-between",
                         alignItems: "center"
-                    }} className="is-flex">
-                        {bm.tags && bm.tags.map((tag, ind) => {
-                            return (
-                                <small className="bookmark-tag"
-                                    key={ind}
-                                    id={ind.toString()}>{tag.tag}  {" "}</small>
-                            )
-                        })}
+                    }}
+                    className="is-flex"
+                >
+                    <div
+                        style={{
+                            justifyContent: "flex-start",
+                            alignItems: "center"
+                        }}
+                        className="is-flex"
+                    >
+                        {bm.tags &&
+              bm.tags.map(
+                  (tag, ind): React.ReactElement => {
+                      return (
+                          <small
+                              className="bookmark-tag"
+                              key={ind}
+                              id={ind.toString()}
+                          >
+                              {tag.tag}{" "}
+                          </small>
+                      );
+                  }
+              )}
                     </div>
-                    <div style={{
-                        justifyContent: "flex-end",
-                        alignItems: "center"
-                    }} className="is-flex">
+                    <div
+                        style={{
+                            justifyContent: "flex-end",
+                            alignItems: "center"
+                        }}
+                        className="is-flex"
+                    >
                         <div>
-
-                            <button onClick={() => props.check(bm.id)}
-                                className={`button is-small ${props.checked ? 'is-active is-dark' : ''}`}>
+                            <button
+                                onClick={(): void => props.check(bm.id)}
+                                className={`button is-small ${
+                                    props.checked ? "is-active is-dark" : ""
+                                }`}
+                            >
                                 <FaTrash />
                             </button>
                             <button
-                                onClick={() => redirect(bm.url)}
+                                onClick={(): void => redirect(bm.url)}
                                 className="is-small button"
                             >
-                                Open
-                    </button>
+                Open
+                            </button>
                             <button
-                                onClick={() => redirect(bm.url, true)}
+                                onClick={(): void => redirect(bm.url, true)}
                                 className="is-small button"
                             >
                                 <FaPlus /> Tab
-                    </button>
-                            <button onClick={() => setModalOpened(true)} className="is-small button">
+                            </button>
+                            <button
+                                onClick={(): void => setModalOpened(true)}
+                                className="is-small button"
+                            >
                                 <FaEdit />
                             </button>
                         </div>
@@ -110,7 +136,14 @@ export const BookmarkRow = (props: BookmarkRowProps) => {
                     <div className="media-left">
                         <div className="media-left">
                             <figure className="is-marginless image is-64x64">
-                                <img src={bm.thumbnail ? bm.thumbnail : "https://via.placeholder.com/150"} alt="Link thumbnail" />
+                                <img
+                                    src={
+                                        bm.thumbnail
+                                            ? bm.thumbnail
+                                            : "https://via.placeholder.com/150"
+                                    }
+                                    alt="Link thumbnail"
+                                />
                             </figure>
                         </div>
                     </div>
@@ -118,18 +151,21 @@ export const BookmarkRow = (props: BookmarkRowProps) => {
                         <div className="content">
                             <p>
                                 <strong>{bm.name}</strong>
-                                <small style={{ marginLeft: "1rem" }}><a href={bm.url}>{truncateText(bm.url, 50)}</a></small>
+                                <small style={{ marginLeft: "1rem" }}>
+                                    <a href={bm.url}>{truncateText(bm.url, 50)}</a>
+                                </small>
                                 <br />
                                 {bm.note}
                             </p>
                         </div>
                     </div>
                     <div className="media-right">
-                        <time>{bm.dateCreated && new Date(bm.dateCreated).toDateString()}</time>
+                        <time>
+                            {bm.dateCreated && new Date(bm.dateCreated).toDateString()}
+                        </time>
                     </div>
                 </div>
-
             </div>
         </div>
-    )
-}
+    );
+};

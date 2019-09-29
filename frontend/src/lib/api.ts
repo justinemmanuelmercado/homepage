@@ -1,10 +1,8 @@
-import { websites } from "../mock/websites";
 import axios from "axios";
 
 const http = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_ROOT
 });
-
 
 export interface BookmarkTag {
     bookmarkId: string;
@@ -22,7 +20,6 @@ export interface BaseBookmark {
 export interface NewBookmark extends BaseBookmark {
     tags: string[];
 }
-
 
 export interface Bookmark extends BaseBookmark {
     dateCreated?: string;
@@ -57,7 +54,7 @@ export const deleteBookmarks = async (
 ): Promise<boolean> => {
     try {
         let parameters = "";
-        items.forEach((id: string) => {
+        items.forEach((id: string): void => {
             if (!id) return;
             parameters += `ids[]=${id}&`;
         });
@@ -77,15 +74,6 @@ export const getBookmarks = async (): Promise<Bookmark[]> => {
     }
 };
 
-export const getFavorites = (): Promise<Website[]> => {
-    return new Promise((resolve, reject) => {
-        if (!websites) reject("Unable to get for some reason");
-        setTimeout(() => {
-            resolve(websites);
-        }, 1000);
-    });
-};
-
 export const getQuickLinks = async (): Promise<QuickLink[]> => {
     try {
         const items = (await http.get("/link?type=2")).data;
@@ -100,11 +88,11 @@ export const getTags = async (): Promise<BookmarkTag[]> => {
     try {
         const { tags } = (await http.get("/tags")).data;
         return tags;
-    } catch(e) {
+    } catch (e) {
         console.error(e);
         return [];
     }
-}
+};
 
 export const putLink = async (
     link: Website | BaseBookmark | NewQuickLink,
@@ -123,22 +111,20 @@ export const putLink = async (
     }
 };
 
-export const deleteQuickLink = async (
-    links: QuickLink[]
-): Promise<boolean> => {
+export const deleteQuickLink = async (links: QuickLink[]): Promise<boolean> => {
     try {
         let parameters = "";
-        links.forEach((ql: QuickLink) => {
+        links.forEach((ql: QuickLink): void => {
             if (!ql) return;
             parameters += `ids[]=${ql.id}&type=2`;
         });
-        await http.delete(`link?${parameters}`)
+        await http.delete(`link?${parameters}`);
         return false;
     } catch (e) {
         console.error(e);
         return false;
     }
-}
+};
 
 export const putLinkEdit = async (
     link: NewBookmark,
@@ -154,5 +140,15 @@ export const putLinkEdit = async (
     } catch (e) {
         console.error(e);
         return false;
+    }
+};
+
+export const getMetaData = async (url: string): Promise<object> => {
+    try {
+        const metadata = await http.get(`/metadata/${url}`);
+        return metadata;
+    } catch (e) {
+        console.error(e);
+        return {};
     }
 };

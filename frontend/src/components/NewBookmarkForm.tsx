@@ -1,8 +1,9 @@
 import React from "react";
-import { NewBookmark, getBookmarks } from "../lib/api";
+import { NewBookmark, getMetaData } from "../lib/api";
 import { Modal } from "./Modal";
 import { ChipsInput } from "./ChipsInput";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
+import validator from "validator";
 
 interface State {
     newBookmark: NewBookmark;
@@ -34,8 +35,7 @@ export class NewBookmarkForm extends React.Component<Props, State> {
 
     private handleInputChange = (
         evt: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-
+    ): void => {
         const newBm = {
             ...this.state.newBookmark,
             [evt.currentTarget.id]: evt.currentTarget.value
@@ -45,22 +45,40 @@ export class NewBookmarkForm extends React.Component<Props, State> {
         });
     };
 
+    private debounced = AwesomeDebouncePromise(getMetaData, 1000);
+
     private handleUrlChange = async (
         evt: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        const debounced = AwesomeDebouncePromise(getBookmarks, 1000);
-        const value = await debounced();
-        console.log(value);
-        // this.handleInputChange(evt);
+    ): Promise<void> => {
+        const url = evt.currentTarget.value;
         this.setState({
             newBookmark: {
                 ...this.state.newBookmark,
-                url: evt.currentTarget.value
+                url
             }
-        })
-    }
+        });
 
-    private handleSetChips = (tags: string[]) => {
+        if (validator.isURL(url)) {
+            try {
+                evt.persist();
+                const { data } = await this.debounced(url);
+                console.log(data);
+                if (data.image) {
+                    this.setState({
+                        newBookmark: {
+                            ...this.state.newBookmark,
+                            thumbnail: data.image
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error("Something went wrong");
+                console.error(e);
+            }
+        }
+    };
+
+    private handleSetChips = (tags: string[]): void => {
         this.setState({
             newBookmark: {
                 ...this.state.newBookmark,
@@ -87,28 +105,35 @@ export class NewBookmarkForm extends React.Component<Props, State> {
                     onClick={this.handleSubmit}
                     className={`button ${this.state.loading && "is-loading"}`}
                 >
-                    Save
+          Save
                 </button>
                 <button
                     disabled={this.state.loading}
-                    onClick={() => this.props.toggleModal(false)}
+                    onClick={(): void => this.props.toggleModal(false)}
                     className={`button ${this.state.loading && "is-loading"}`}
                 >
-                    Cancel
+          Cancel
                 </button>
             </div>
         );
         return (
             <Modal
                 footer={footer}
-                handleClose={() => this.props.toggleModal(false)}
+                handleClose={(): void => this.props.toggleModal(false)}
                 title={"Bookmark"}
             >
                 <div className="form">
                     <div className="columns">
                         <div className="column">
                             <figure className="is-marginless image is-128x128">
-                                <img src={bm.thumbnail ? bm.thumbnail : "https://via.placeholder.com/150"} alt="Link thumbnail" />
+                                <img
+                                    src={
+                                        bm.thumbnail
+                                            ? bm.thumbnail
+                                            : "https://via.placeholder.com/150"
+                                    }
+                                    alt="Link thumbnail"
+                                />
                             </figure>
                             <div className="field">
                                 <div className="control">
