@@ -9,6 +9,8 @@ import { GetLinks } from "./handler/get-links";
 import { PutLink } from "./handler/put-link";
 import { GetTags } from "./handler/get-tags";
 import { PutLinkEdit } from "./handler/put-link-edit";
+import { GetMetadata } from "./handler/get-metadata";
+
 
 AWS.config.update({ region: process.env.AWS_REGION || "us-east-1" });
 
@@ -33,6 +35,7 @@ export default async function () {
   app.put('/link/:id', PutLinkEdit(connection));
   app.delete('/link', DeleteLinks(connection));
   app.get('/tags', GetTags(connection));
+  app.get('/metadata/*', GetMetadata.get)
 
   return app;
 }

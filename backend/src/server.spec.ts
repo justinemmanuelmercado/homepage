@@ -1,3 +1,4 @@
+require('dotenv').config({ path: "./" });
 import runApp from "./app";
 import request from 'supertest';
 
@@ -15,7 +16,7 @@ describe('Server', async () => {
             .expect(200)
             .expect({
                 message: "congrats",
-                name: "default"
+                name: process.env.CONNECTION_NAME
             })
             .end(done);
     });
