@@ -143,12 +143,17 @@ export const putLinkEdit = async (
     }
 };
 
-export const getMetaData = async (url: string): Promise<object> => {
+/* eslint-disable */
+export const getMetaData = async (
+  url: string
+): Promise<{ data: Record<string, any> }> => {
+  /* eslint-enable */
+
     try {
         const metadata = await http.get(`/metadata/${url}`);
         return metadata;
     } catch (e) {
         console.error(e);
-        return {};
+        return { data: [] };
     }
 };

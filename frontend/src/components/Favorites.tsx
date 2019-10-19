@@ -1,6 +1,6 @@
 import React from "react";
 import { Title } from "./Title";
-import { getFavorites, Website } from "../lib/api";
+import { getQuickLinks, Website } from "../lib/api";
 
 interface Props {}
 
@@ -15,7 +15,7 @@ export class Favorites extends React.Component<Props, State> {
         loading: true
     };
     public async componentDidMount(): Promise<void> {
-        const websites = await getFavorites();
+        const websites = await getQuickLinks();
 
         this.setState({
             websites: websites as Website[],
@@ -24,24 +24,26 @@ export class Favorites extends React.Component<Props, State> {
     }
 
     private renderWebsites(): React.ReactElement[] {
-        return this.state.websites.map((ws: Website, i: number) => {
-            return (
-                <div key={i} className="column is-one-fifth">
-                    <div className="card">
-                        <div className="card-image">
-                            <img
-                                style={{
-                                    padding: 0,
-                                    margin: 0
-                                }}
-                                src="https://loremflickr.com/200/200"
-                                alt="Placeholder image"
-                            />
+        return this.state.websites.map(
+            (ws: Website, i: number): React.ReactElement => {
+                return (
+                    <div key={i} className="column is-one-fifth">
+                        <div className="card">
+                            <div className="card-image">
+                                <img
+                                    style={{
+                                        padding: 0,
+                                        margin: 0
+                                    }}
+                                    src="https://loremflickr.com/200/200"
+                                    alt="Placeholder image"
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-            );
-        });
+                );
+            }
+        );
     }
     public render(): React.ReactElement {
         const loading = (
@@ -66,5 +68,5 @@ export class Favorites extends React.Component<Props, State> {
         );
     }
 
-    private handleClick = () => {};
+    private handleClick = (): void => {};
 }

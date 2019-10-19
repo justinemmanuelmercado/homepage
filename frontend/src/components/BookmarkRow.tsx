@@ -7,7 +7,7 @@ interface BookmarkRowProps {
     bm: Bookmark;
     check: (id: string | undefined) => void;
     checked: boolean;
-    key: string;
+    key?: string;
     onFinish: () => Promise<void>;
 }
 
