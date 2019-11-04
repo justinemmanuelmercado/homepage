@@ -7,7 +7,7 @@
       "watch:serve": "node --inspect -r ts-node/register src/server.ts",
       "start": "nodemon -e ts -w ./src -x npm run watch:serve",
       "build": "rm -rf lib/* && tsc",
-      "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts",
+      "orm": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts",
       "db:seed": "ts-node ./scripts/seed-data.ts -u",
       "db:revert": "ts-node ./scripts/seed-data.ts -d",
       "test": "mocha -r ts-node/register src/*.spec.ts src/**/*.spec.ts"
