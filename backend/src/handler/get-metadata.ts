@@ -1,8 +1,29 @@
 import { Request, Response } from "express";
 import { isURL } from "validator";
 
+import metascraper from 'metascraper';
 // @ts-ignore
-import { getMetadata } from "page-metadata-parser";
+import metascraperAuthor from 'metascraper-author';
+// @ts-ignore
+import metascraperDate from 'metascraper-date';
+// @ts-ignore
+import metascraperDescription from 'metascraper-description';
+// @ts-ignore
+import metascraperImage from 'metascraper-image';
+// @ts-ignore
+import metascraperLogo from 'metascraper-logo';
+// @ts-ignore
+import metascraperLogoFavicon from 'metascraper-logo-favicon';
+// @ts-ignore
+import metascraperTitle from 'metascraper-title';
+// @ts-ignore
+import metascraperUrl from 'metascraper-url';
+// @ts-ignore
+import metascraperVideo from 'metascraper-video';
+// @ts-ignore
+import metascraperYoutube from 'metascraper-youtube';
+import got from "got";
+// import { getMetadata } from "page-metadata-parser";
 import domino from "domino"
 import fetch from "node-fetch";
 
@@ -25,11 +46,28 @@ export const GetMetadata = {
             console.error(e);
         }
     },
-    scrape: async (url: string) => {;
+    scrape: async (url: string) => {
+        ;
         const response = await fetch(url);
         const html = await response.text();
         const doc = domino.createWindow(html).document;
-        const metadata = getMetadata(doc, url);
+        // const metadata = getMetadata(doc, url);
+
+        const { body, url: gotUrl } = await got(url);
+        const scraper = metascraper([
+            metascraperAuthor(),
+            metascraperDate(),
+            metascraperDescription(),
+            metascraperImage(),
+            metascraperLogo(),
+            metascraperLogoFavicon(),
+            metascraperTitle(),
+            metascraperUrl(),
+            metascraperYoutube(),
+            metascraperVideo()
+        ])
+
+        const metadata = await scraper({ html: body, url: gotUrl })
         return metadata;
     },
     validator: (url: string) => {

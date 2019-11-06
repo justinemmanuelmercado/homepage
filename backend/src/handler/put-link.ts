@@ -33,7 +33,6 @@ async function putLink(body: any, connection: Connection) {
     if (body.tags.length > 0) {
         let newTags: { tag: string, bookmarkId: string }[] = [];
         newTags = body.tags.map((tag: string) => {
-            console.log({ tag, bookmarkId: savedLink.id });
             return { tag, bookmarkId: savedLink.id }
         })
 

@@ -45,7 +45,6 @@ export const BookmarkRow = (props: BookmarkRowProps): React.ReactElement => {
         await putLinkEdit(newBookmark, 1);
         await props.onFinish();
     };
-    console.log(bm, "LOOKY");
     return (
         <div
             key={bm.id}

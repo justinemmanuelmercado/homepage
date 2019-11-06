@@ -58,7 +58,6 @@ async function putLink(body: any, connection: Connection) {
 
 export const PutLinkEdit = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
     const { id } = req.params;
-    console.log(req.body);
 
     let response = {
         table: process.env.TABLE_NAME,

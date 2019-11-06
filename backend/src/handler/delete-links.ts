@@ -5,7 +5,6 @@ import { QuickLink } from "../entity/QuickLink";
 
 export const DeleteLinks = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
     const { ids, type } = req.query;
-    console.log(type);
     try {
         let query;
         let repository:  Repository<any>;

@@ -62,7 +62,16 @@ export class NewBookmarkForm extends React.Component<Props, State> {
             try {
                 evt.persist();
                 const { data } = await this.debounced(url);
-                console.log(data);
+                this.setState((currentState) => {
+                    let { newBookmark: bm } = currentState;
+                    bm.thumbnail = data.thumbnail ? data.thumbnail : "";
+                    bm.note = data.description ? data.description : "";
+                    bm.name = data.title ? data.title : "";
+                    return {
+                        ...currentState,
+                        bm
+                    }
+                })
                 if (data.image) {
                     this.setState({
                         newBookmark: {
