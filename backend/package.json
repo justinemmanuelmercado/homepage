@@ -33,6 +33,7 @@
       "dotenv": "^7.0.0",
       "express": "^4.16.4",
       "faker": "^4.1.0",
+      "metascraper": "^5.7.17",
       "mysql": "^2.14.1",
       "node-fetch": "^2.6.0",
       "page-metadata-parser": "^1.1.4",

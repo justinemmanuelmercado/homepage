@@ -16,7 +16,9 @@ async function putLink(body: any, connection: Connection) {
             url: body.url
         });
         newLink.note = body.note;
-
+        if(body.thumbnail){
+            newLink.thumbnail = body.thumbnail
+        }
     } else if (body.type == 2) {
         newLink = new QuickLink({
             id: linkId,
