@@ -1,0 +1,19 @@
+{
+  "name": "homepage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "backup": "eval $(egrep -v '^#' .env | xargs) sh ./backupdb.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justinemmanuelmercado/homepage.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/justinemmanuelmercado/homepage/issues"
+  },
+  "homepage": "https://github.com/justinemmanuelmercado/homepage#readme"
+}
