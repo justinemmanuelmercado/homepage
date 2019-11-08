@@ -3,12 +3,45 @@ import "./App.css";
 import { Bookmarks } from "./components/Bookmarks";
 import { Layout } from "./components/Layout";
 import { QuickLinks } from "./components/QuickLinks";
-class App extends Component {
+import { Header } from "./components/Header";
+
+interface State {
+    selected: string;
+}
+
+class App extends Component<{}, State> {
+    public state = {
+        selected: "favorites"
+    };
+    public pages = ["favorites", "bookmarks"];
+    public setSelected = (selected: string): void => {
+        this.setState({
+            selected
+        });
+    };
     public render(): React.ReactElement {
+        const { selected } = this.state;
         return (
             <Layout>
-                <QuickLinks />
-                <Bookmarks />
+                <Header
+                    setSelected={this.setSelected}
+                    pages={this.pages}
+                    selected={selected}
+                />
+                <div
+                    style={{
+                        display: selected === "favorites" ? "block" : "none"
+                    }}
+                >
+                    <QuickLinks />
+                </div>
+                <div
+                    style={{
+                        display: selected === "bookmarks" ? "block" : "none"
+                    }}
+                >
+                    <Bookmarks />
+                </div>
             </Layout>
         );
     }
