@@ -9,7 +9,7 @@ interface HeaderProps {
 export const Header = (props: HeaderProps): React.ReactElement => {
     const { selected, pages, setSelected } = props;
     return (
-        <div className="tabs is-centered">
+        <div className="tabs is-centered is-large">
             <ul>
                 {pages.map(
                     (page: string): React.ReactElement => {

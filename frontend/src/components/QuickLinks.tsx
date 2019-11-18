@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPlus, FaTrash, FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { FaPlus, FaTrash, FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { QuickLink } from "./QuickLink";
 import { NewQuickLinkForm } from "./NewQuickLinkForm";
 import {
@@ -9,7 +9,7 @@ import {
     deleteQuickLink
 } from "../lib/api";
 
-interface Props { }
+interface Props {}
 interface State {
     quickLinks: QuickLinkInterface[];
     modalOpen: boolean;
@@ -18,7 +18,7 @@ interface State {
     items: number;
 }
 
-const MAX_ITEMS = 10;
+const MAX_ITEMS = 8;
 export class QuickLinks extends React.Component<Props, State> {
     public state = {
         quickLinks: [],
@@ -28,7 +28,16 @@ export class QuickLinks extends React.Component<Props, State> {
         currentPage: 0
     };
 
+    private renderMaxPage(length: number): number {
+        return Math.ceil(length / this.state.items);
+    }
+
     public async componentDidMount(): Promise<void> {
+        if (window && window.innerWidth < 769) {
+            this.setState({
+                items: MAX_ITEMS / 2
+            });
+        }
         await this.loadQuickLinks();
     }
 
@@ -37,7 +46,7 @@ export class QuickLinks extends React.Component<Props, State> {
         const start = currentPage * items;
         const end = start + items;
         const length = quickLinks.length;
-        const maxPage = Math.ceil(length / items) - 1
+        const maxPage = Math.ceil(length / items) - 1;
         const filteredQuickLinks = quickLinks.slice(start, end);
 
         const goToPage = (page: number): void => {
@@ -47,82 +56,102 @@ export class QuickLinks extends React.Component<Props, State> {
                     currentPage: page
                 });
             }
-        }
+        };
 
         return (
-            <nav className="navbar is-inline-flex is-fullwidth" style={{
-                alignItems: "center",
-                justifyContent: "space-between"
-            }}>
-                <div className="is-inline-flex">
-                    <div className="is-flex" style={{
-                        flexDirection: "column"
-                    }}>
-                        <div className="navbar-item">
-                            <button className={`button is-small ${this.state.deleteMode ? 'is-active is-dark' : ''}`} onClick={() => this.toggleDeleteMode()}>
-                                <FaTrash />
-                            </button>
+            <div className="container">
+                <div className="section">
+                    <div style={{ maxWidth: 1024 }}>
+                        <div className="column">
+                            <div>
+                                <button
+                                    className={`button is-small ${
+                                        this.state.deleteMode ? "is-active is-dark" : ""
+                                    }`}
+                                    onClick={(): void => this.toggleDeleteMode()}
+                                >
+                                    <FaTrash />
+                                </button>
+                            </div>
+                            <div>
+                                <button
+                                    className="button is-small"
+                                    onClick={(): void => this.toggleModal(true)}
+                                >
+                                    <FaPlus />
+                                </button>
+                            </div>
                         </div>
-                        <div className="navbar-item">
-                            <button className="button is-small" onClick={() => this.toggleModal(true)}>
-                                <FaPlus />
-                            </button>
+                        <div className="column is-fullwidth columns">
+                            <div className="pagination-button" style={{ display: "flex" }}>
+                                <a
+                                    className="pagination-previous"
+                                    onClick={(): void => goToPage(this.state.currentPage - 1)}
+                                >
+                                    <FaAngleLeft />
+                                </a>
+                            </div>
+                            <div className="columns column  is-fullwidth is-multiline is-mobile">
+                                {filteredQuickLinks.map(
+                                    (ql: QuickLinkInterface): React.ReactElement => {
+                                        return (
+                                            <div
+                                                key={ql.url}
+                                                className="column is-half-mobile is-one-quarter-tablet is-one-quarter-desktop is-one-quarter-widescreen is-one-quarter-fullhd"
+                                            >
+                                                <QuickLink
+                                                    link={ql}
+                                                    deleteMode={this.state.deleteMode}
+                                                    deleteQuickLink={this.deleteQuickLink}
+                                                />
+                                            </div>
+                                        );
+                                    }
+                                )}
+                            </div>
+                            <div className="pagination-button" style={{ display: "flex" }}>
+                                <a
+                                    className="pagination-next"
+                                    onClick={(): void => goToPage(this.state.currentPage + 1)}
+                                >
+                                    <FaAngleRight />
+                                </a>
+                            </div>
                         </div>
+                        <NewQuickLinkForm
+                            isOpen={this.state.modalOpen}
+                            toggleModal={this.toggleModal}
+                            handleSubmit={this.handleSubmit}
+                        />
                     </div>
-
-                    {maxPage > 0 && <div className="is-flex" style={{
-                        flexDirection: "column"
-                    }}>
-                        <div className="navbar-item">
-                            <button className="button is-small" disabled={currentPage === 0} onClick={() => goToPage(currentPage - 1)}>
-                                <FaAngleUp />
-                            </button>
-                        </div>
-                        <div className="navbar-item">
-                            <button className="button is-small" disabled={currentPage === maxPage} onClick={() => goToPage(currentPage + 1)}>
-                                <FaAngleDown />
-                            </button>
-                        </div>
-
-                    </div>}
                 </div>
-                <div className="is-inline-flex">
-                    {filteredQuickLinks.map((ql: QuickLinkInterface) => {
-                        return <QuickLink key={ql.url} link={ql} deleteMode={this.state.deleteMode} deleteQuickLink={this.deleteQuickLink} />;
-                    })}
-                </div>
-                <NewQuickLinkForm
-                    isOpen={this.state.modalOpen}
-                    toggleModal={this.toggleModal}
-                    handleSubmit={this.handleSubmit}
-                />
-            </nav>
+            </div>
         );
     }
 
-    private deleteQuickLink = async (ql: QuickLinkInterface) => {
+    private deleteQuickLink = async (ql: QuickLinkInterface): Promise<void> => {
         await deleteQuickLink([ql]);
         await this.loadQuickLinks();
-    }
+    };
 
-    private toggleDeleteMode = () => {
+    private toggleDeleteMode = (): void => {
         this.setState({
             deleteMode: !this.state.deleteMode
-        })
-    }
+        });
+    };
 
-    private handleSubmit = async (ql: QuickLinkInterface) => {
+    private handleSubmit = async (ql: QuickLinkInterface): Promise<void> => {
         await putLink(ql, 2);
         await this.loadQuickLinks();
     };
 
-    private toggleModal = (val: boolean) => {
+    private toggleModal = (val: boolean): void => {
         this.setState({
             modalOpen: val
         });
     };
 
-    private loadQuickLinks = async () => {
+    private loadQuickLinks = async (): Promise<void> => {
         const ql = await getQuickLinks();
         this.setState({
             quickLinks: ql

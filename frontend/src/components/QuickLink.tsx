@@ -8,49 +8,54 @@ interface Props {
     deleteQuickLink: (ql: QuickLinkInterface) => void;
 }
 
-const childSeparator = "~~";
-
-export const QuickLink = (props: Props) => {
+export const QuickLink = (props: Props): React.ReactElement => {
     return (
         <span key={props.link.url}>
             <InnerLink {...props} />
         </span>
-    )
-}
+    );
+};
 
-const InnerLink = (
-    props: Props
-): React.FunctionComponentElement<Props> => {
+const truncateText = (text: string, length: number = 50): string => {
+    if (text.length < length) {
+        return text;
+    }
+
+    return `${text.substring(0, length)}...`;
+};
+
+const InnerLink = (props: Props): React.FunctionComponentElement<Props> => {
     const ql = props.link;
+    const url = new URL(ql.url);
+    const domain = url.host;
     if (props.deleteMode) {
-        return <a onClick={() => props.deleteQuickLink(ql)} className="navbar-item">
-            <FaTimes />
-            {" "}
-            {ql.name}
-        </a>
-    } else if (ql.children.length > 0) {
-        const childNodes = ql.children.map(
-            (child: string): React.ReactElement => {
-                const [name, url] = child.split(childSeparator);
-                return <a key={url} href={url} className="navbar-item">
-                    {name}
-                </a>
-
-            }
-        );
         return (
-            <div className="navbar-item has-dropdown is-hoverable">
-                <a className="navbar-link" href={ql.url}>
-                    {ql.name}
-                </a>
-                <div className="navbar-dropdown">{childNodes}</div>
-            </div>
+            <a
+                onClick={(): void => props.deleteQuickLink(ql)}
+                className="navbar-item"
+            >
+                <FaTimes /> {ql.name}
+            </a>
         );
     } else {
         return (
-            <a href={ql.url} className="navbar-item">
-                {ql.name}
-            </a>
+            <div
+                style={
+                    {
+                        // display: "flex",
+                        // justifyContent: "center",
+                        // alignItems: "center",
+                        // flexDirection: "column"
+                    }
+                }
+            >
+                <figure className="quicklink-transition image is-1by1">
+                    <img src="https://bulma.io/images/placeholders/128x128.png" />
+                </figure>
+                <small style={{ marginTop: 20 }}>
+                    <a href={ql.url}>{truncateText(domain, 50)}</a>
+                </small>
+            </div>
         );
     }
 };
