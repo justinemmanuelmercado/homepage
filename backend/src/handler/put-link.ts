@@ -7,43 +7,46 @@ import { BookmarkTag } from "../entity/BookmarkTag";
 import uuidv4 from "uuid/v4";
 
 async function putLink(body: any, connection: Connection) {
-    let newLink: Bookmark | QuickLink;
+    let newLink: QuickLink | Bookmark;
     let linkId = uuidv4();
     if (body.type == 1) {
-        newLink = new Bookmark({
+        const newBookmark: Bookmark = new Bookmark({
             id: linkId,
             name: body.name,
             url: body.url
         });
-        newLink.note = body.note;
-        if(body.thumbnail){
-            newLink.thumbnail = body.thumbnail
+        newBookmark.note = body.note;
+        newBookmark.thumbnail = body.thumbnail
+        const savedLink = await connection.manager.save(newBookmark);
+        if (body.tags.length > 0) {
+            let newTags: { tag: string, bookmarkId: string }[] = [];
+            newTags = body.tags.map((tag: string) => {
+                return { tag, bookmarkId: savedLink.id }
+            })
+
+            await connection
+                .createQueryBuilder()
+                .insert()
+                .into(BookmarkTag)
+                .values(newTags)
+                .execute();
+
         }
     } else if (body.type == 2) {
-        newLink = new QuickLink({
+        let newQuicklink: QuickLink = new QuickLink({
             id: linkId,
             name: body.name,
             url: body.url
         });
-        newLink.children = body.children;
+        if (body.thumbnail) {
+            newQuicklink.thumbnail = body.thumbnail
+        }
+        await connection.manager.save(newQuicklink);
+
     } else {
         throw `invalid type: ${body.type}`
     }
-    const savedLink = await connection.manager.save(newLink);
-    if (body.tags.length > 0) {
-        let newTags: { tag: string, bookmarkId: string }[] = [];
-        newTags = body.tags.map((tag: string) => {
-            return { tag, bookmarkId: savedLink.id }
-        })
 
-        await connection
-            .createQueryBuilder()
-            .insert()
-            .into(BookmarkTag)
-            .values(newTags)
-            .execute();
-
-    }
 }
 
 export const PutLink = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {

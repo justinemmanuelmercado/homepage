@@ -4,6 +4,7 @@ import { Bookmarks } from "./components/Bookmarks";
 import { Layout } from "./components/Layout";
 import { QuickLinks } from "./components/QuickLinks";
 import { Header } from "./components/Header";
+import { FaBookmark, FaStar } from "react-icons/fa";
 
 interface State {
     selected: string;
@@ -13,7 +14,10 @@ class App extends Component<{}, State> {
     public state = {
         selected: "favorites"
     };
-    public pages = ["favorites", "bookmarks"];
+    public pages = [
+        { id: "favorites", icon: FaStar },
+        { id: "bookmarks", icon: FaBookmark }
+    ];
     public setSelected = (selected: string): void => {
         this.setState({
             selected

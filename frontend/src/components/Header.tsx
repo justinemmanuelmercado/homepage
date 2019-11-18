@@ -1,33 +1,34 @@
 import React from "react";
+import { IconType } from "react-icons";
 
 interface HeaderProps {
     setSelected: (selected: string) => void;
     selected: string;
-    pages: string[];
+    pages: { id: string; icon: IconType }[];
 }
 
 export const Header = (props: HeaderProps): React.ReactElement => {
     const { selected, pages, setSelected } = props;
     return (
-        <div className="tabs is-centered is-large">
+        <div className="tabs">
             <ul>
                 {pages.map(
-                    (page: string): React.ReactElement => {
-                        const className = page === selected ? "is-active" : "";
-
+                    (page): React.ReactElement => {
+                        const { icon: Icon, id } = page;
+                        const className = id === selected ? "is-active" : "";
                         return (
                             <li
-                                key={page}
+                                key={id}
                                 className={className}
-                                onClick={(): void => setSelected(page)}
+                                onClick={(): void => setSelected(id)}
                             >
                                 <a>
-                                    <span className="icon is-small">
-                                        <i className="fas fa-image" aria-hidden="true"></i>
+                                    <span className="icon">
+                                        <Icon />
                                     </span>
                                     <span>
-                                        {page[0].toUpperCase()}
-                                        {page.substring(1)}
+                                        {id[0].toUpperCase()}
+                                        {id.substring(1)}
                                     </span>
                                 </a>
                             </li>

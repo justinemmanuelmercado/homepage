@@ -14,6 +14,8 @@
     "bulma": "^0.7.5",
     "css-reset-and-normalize": "^2.1.0",
     "dotenv": "^7.0.0",
+    "fsevents": "^2.1.0",
+    "node-sass": "^4.13.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
@@ -70,6 +72,7 @@
   "resolutions": {
     "react-router": "4.3.1",
     "**/**/tar": "4.4.2",
-    "**/**/handlebars": ">=4.4.5"
+    "**/**/handlebars": ">=4.5.2",
+    "**/**/fsevents": "^2.1.0"
   }
 }

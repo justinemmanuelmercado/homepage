@@ -39,22 +39,29 @@ const InnerLink = (props: Props): React.FunctionComponentElement<Props> => {
         );
     } else {
         return (
-            <div
-                style={
-                    {
-                        // display: "flex",
-                        // justifyContent: "center",
-                        // alignItems: "center",
-                        // flexDirection: "column"
-                    }
-                }
-            >
-                <figure className="quicklink-transition image is-1by1">
-                    <img src="https://bulma.io/images/placeholders/128x128.png" />
-                </figure>
-                <small style={{ marginTop: 20 }}>
-                    <a href={ql.url}>{truncateText(domain, 50)}</a>
-                </small>
+            <div>
+                <a href={ql.url}>
+                    <figure
+                        style={{
+                            height: "5rem",
+                            width: "5rem"
+                        }}
+                        className="quicklink-transition image is-1by1"
+                    >
+                        <img src="https://bulma.io/images/placeholders/128x128.png" />
+                    </figure>
+
+                    <div
+                        style={{
+                            marginTop: "1rem",
+                            display: "flex",
+                            justifyContent: "center",
+                            width: "100%"
+                        }}
+                    >
+                        <small>{truncateText(domain, 50)}</small>
+                    </div>
+                </a>
             </div>
         );
     }

@@ -33,10 +33,10 @@ class DatabaseSeeder {
         return createConnection({
             name: 'seed',
             // @ts-ignore
-            type: TYPEORM_CONNECTION,
+            type: TYPEORM_CONNECTION as "postgres",
             username: TYPEORM_USERNAME,
             password: TYPEORM_PASSWORD,
-            port: TYPEORM_PORT,
+            port: parseInt(TYPEORM_PORT || "5432"),
             host: TYPEORM_HOST,
             database: TYPEORM_DATABASE,
             synchronize: false,

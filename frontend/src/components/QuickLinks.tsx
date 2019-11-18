@@ -16,16 +16,21 @@ interface State {
     deleteMode: boolean;
     currentPage: number;
     items: number;
+    containerWidth: number;
 }
 
-const MAX_ITEMS = 8;
+const MAX_ITEMS_WIDE = 5;
+const MAX_ITEMS_MOBILE = 3;
+const LINKS_WIDTH_WIDE = 600;
+const LINKS_WIDTH_MOBILE = 360;
 export class QuickLinks extends React.Component<Props, State> {
     public state = {
         quickLinks: [],
         modalOpen: false,
         deleteMode: false,
-        items: MAX_ITEMS,
-        currentPage: 0
+        items: MAX_ITEMS_WIDE,
+        currentPage: 0,
+        containerWidth: LINKS_WIDTH_WIDE
     };
 
     private renderMaxPage(length: number): number {
@@ -35,7 +40,8 @@ export class QuickLinks extends React.Component<Props, State> {
     public async componentDidMount(): Promise<void> {
         if (window && window.innerWidth < 769) {
             this.setState({
-                items: MAX_ITEMS / 2
+                items: MAX_ITEMS_MOBILE,
+                containerWidth: LINKS_WIDTH_MOBILE
             });
         }
         await this.loadQuickLinks();
@@ -61,7 +67,7 @@ export class QuickLinks extends React.Component<Props, State> {
         return (
             <div className="container">
                 <div className="section">
-                    <div style={{ maxWidth: 1024 }}>
+                    <div>
                         <div className="column">
                             <div>
                                 <button
@@ -82,38 +88,33 @@ export class QuickLinks extends React.Component<Props, State> {
                                 </button>
                             </div>
                         </div>
-                        <div className="column is-fullwidth columns">
-                            <div className="pagination-button" style={{ display: "flex" }}>
-                                <a
-                                    className="pagination-previous"
-                                    onClick={(): void => goToPage(this.state.currentPage - 1)}
-                                >
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center"
+                            }}
+                        >
+                            <div className="pagination-button">
+                                <a onClick={(): void => goToPage(this.state.currentPage - 1)}>
                                     <FaAngleLeft />
                                 </a>
                             </div>
-                            <div className="columns column  is-fullwidth is-multiline is-mobile">
-                                {filteredQuickLinks.map(
-                                    (ql: QuickLinkInterface): React.ReactElement => {
-                                        return (
-                                            <div
-                                                key={ql.url}
-                                                className="column is-half-mobile is-one-quarter-tablet is-one-quarter-desktop is-one-quarter-widescreen is-one-quarter-fullhd"
-                                            >
-                                                <QuickLink
-                                                    link={ql}
-                                                    deleteMode={this.state.deleteMode}
-                                                    deleteQuickLink={this.deleteQuickLink}
-                                                />
-                                            </div>
-                                        );
-                                    }
-                                )}
-                            </div>
-                            <div className="pagination-button" style={{ display: "flex" }}>
-                                <a
-                                    className="pagination-next"
-                                    onClick={(): void => goToPage(this.state.currentPage + 1)}
-                                >
+                            {filteredQuickLinks.map(
+                                (ql: QuickLinkInterface): React.ReactElement => {
+                                    return (
+                                        <div style={{ margin: "0 0.8rem" }} key={ql.url}>
+                                            <QuickLink
+                                                link={ql}
+                                                deleteMode={this.state.deleteMode}
+                                                deleteQuickLink={this.deleteQuickLink}
+                                            />
+                                        </div>
+                                    );
+                                }
+                            )}
+                            <div className="pagination-button">
+                                <a onClick={(): void => goToPage(this.state.currentPage + 1)}>
                                     <FaAngleRight />
                                 </a>
                             </div>

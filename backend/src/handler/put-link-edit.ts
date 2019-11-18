@@ -17,7 +17,7 @@ interface BookmarkRequest {
 
 async function putLink(body: any, connection: Connection) {
 
-    let link: Bookmark | QuickLink | undefined;
+    let link: Bookmark | undefined;
     let repo;
     if (isBookmark(body)) {
         const {tags, ...bodyWithoutTags} = body;
