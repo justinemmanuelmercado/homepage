@@ -1,13 +1,16 @@
 import React from "react";
-import { FaPlus, FaTrash, FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { FaPlus, FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { QuickLink } from "./QuickLink";
-import { NewQuickLinkForm } from "./NewQuickLinkForm";
 import {
+    BaseQuickLink,
     getQuickLinks,
     QuickLink as QuickLinkInterface,
     putLink,
-    deleteQuickLink
+    deleteQuickLink,
+    getMetaData
 } from "../lib/api";
+import AwesomeDebouncePromise from "awesome-debounce-promise";
+import validator from "validator";
 
 interface Props {}
 interface State {
@@ -17,20 +20,32 @@ interface State {
     currentPage: number;
     items: number;
     containerWidth: number;
+    formWidth: string;
+    quicklink: BaseQuickLink;
 }
 
 const MAX_ITEMS_WIDE = 5;
 const MAX_ITEMS_MOBILE = 3;
 const LINKS_WIDTH_WIDE = 600;
 const LINKS_WIDTH_MOBILE = 360;
+const FORM_WIDTH_WIDE = "60%";
+const FORM_WIDTH_MOBILE = "100%";
+const BLANK_QL: BaseQuickLink = {
+    name: "",
+    url: "",
+    thumbnail: ""
+};
+
 export class QuickLinks extends React.Component<Props, State> {
-    public state = {
+    public state: State = {
         quickLinks: [],
         modalOpen: false,
         deleteMode: false,
         items: MAX_ITEMS_WIDE,
         currentPage: 0,
-        containerWidth: LINKS_WIDTH_WIDE
+        containerWidth: LINKS_WIDTH_WIDE,
+        formWidth: FORM_WIDTH_WIDE,
+        quicklink: BLANK_QL
     };
 
     private renderMaxPage(length: number): number {
@@ -41,14 +56,57 @@ export class QuickLinks extends React.Component<Props, State> {
         if (window && window.innerWidth < 769) {
             this.setState({
                 items: MAX_ITEMS_MOBILE,
-                containerWidth: LINKS_WIDTH_MOBILE
+                containerWidth: LINKS_WIDTH_MOBILE,
+                formWidth: FORM_WIDTH_MOBILE
             });
         }
         await this.loadQuickLinks();
     }
 
+    private debounced = AwesomeDebouncePromise(getMetaData, 1000);
+
+    private handleUrlChange = async (
+        evt: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+    ): Promise<void> => {
+        const url = evt.currentTarget.value;
+        const { quicklink } = this.state;
+        if (!quicklink) return;
+        const { name, thumbnail = "" } = quicklink;
+
+        this.setState({
+            quicklink: {
+                url,
+                name,
+                thumbnail
+            }
+        });
+
+        console.log(validator.isURL(url), url);
+
+        if (validator.isURL(url)) {
+            try {
+                evt.persist();
+                const { data } = await this.debounced(url);
+                this.setState(
+                    (currentState): State => {
+                        let { quicklink: ql } = currentState;
+                        ql.thumbnail = data.logo ? data.logo : "";
+                        ql.name = data.title ? data.title : "";
+                        return {
+                            ...currentState,
+                            quicklink: ql
+                        };
+                    }
+                );
+            } catch (e) {
+                console.error("Something went wrong");
+                console.error(e);
+            }
+        }
+    };
+
     public render(): React.ReactElement {
-        let { quickLinks, currentPage, items } = this.state;
+        let { quickLinks, currentPage, items, formWidth } = this.state;
         const start = currentPage * items;
         const end = start + items;
         const length = quickLinks.length;
@@ -70,22 +128,24 @@ export class QuickLinks extends React.Component<Props, State> {
                     <div>
                         <div className="column">
                             <div>
-                                <button
-                                    className={`button is-small ${
-                                        this.state.deleteMode ? "is-active is-dark" : ""
-                                    }`}
-                                    onClick={(): void => this.toggleDeleteMode()}
+                                <div
+                                    className="field has-addons is-horizontal"
+                                    style={{ justifyContent: "center" }}
                                 >
-                                    <FaTrash />
-                                </button>
-                            </div>
-                            <div>
-                                <button
-                                    className="button is-small"
-                                    onClick={(): void => this.toggleModal(true)}
-                                >
-                                    <FaPlus />
-                                </button>
+                                    <div className="control" style={{ width: formWidth }}>
+                                        <input
+                                            onChange={this.handleUrlChange}
+                                            className="input"
+                                            type="text"
+                                            placeholder="https://www.example.com"
+                                        />
+                                    </div>
+                                    <div className="control">
+                                        <button className="button" onClick={this.handleSubmit}>
+                                            <FaPlus />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div
@@ -119,11 +179,6 @@ export class QuickLinks extends React.Component<Props, State> {
                                 </a>
                             </div>
                         </div>
-                        <NewQuickLinkForm
-                            isOpen={this.state.modalOpen}
-                            toggleModal={this.toggleModal}
-                            handleSubmit={this.handleSubmit}
-                        />
                     </div>
                 </div>
             </div>
@@ -141,8 +196,9 @@ export class QuickLinks extends React.Component<Props, State> {
         });
     };
 
-    private handleSubmit = async (ql: QuickLinkInterface): Promise<void> => {
-        await putLink(ql, 2);
+    private handleSubmit = async (): Promise<void> => {
+        const { quicklink } = this.state;
+        await putLink(quicklink, 2);
         await this.loadQuickLinks();
     };
 

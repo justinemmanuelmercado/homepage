@@ -1,6 +1,7 @@
 import React from "react";
 import { QuickLink as QuickLinkInterface } from "../lib/api";
 import { FaTimes } from "react-icons/fa";
+import { getDomain } from "../lib/string";
 
 interface Props {
     link: QuickLinkInterface;
@@ -26,8 +27,10 @@ const truncateText = (text: string, length: number = 50): string => {
 
 const InnerLink = (props: Props): React.FunctionComponentElement<Props> => {
     const ql = props.link;
-    const url = new URL(ql.url);
-    const domain = url.host;
+    const domain = getDomain(ql.url);
+    const imgSrc = ql.thumbnail
+        ? ql.thumbnail
+        : "https://bulma.io/images/placeholders/128x128.png";
     if (props.deleteMode) {
         return (
             <a
@@ -48,7 +51,7 @@ const InnerLink = (props: Props): React.FunctionComponentElement<Props> => {
                         }}
                         className="quicklink-transition image is-1by1"
                     >
-                        <img src="https://bulma.io/images/placeholders/128x128.png" />
+                        <img src={imgSrc} />
                     </figure>
 
                     <div

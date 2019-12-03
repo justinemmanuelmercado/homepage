@@ -36,10 +36,11 @@ export interface Website {
 export interface BaseQuickLink {
     name: string;
     url: string;
+    thumbnail?: string;
 }
 
 export interface QuickLink extends BaseQuickLink {
-    children: string[];
+    children?: string[];
     id: string;
     [key: string]: string[] | string | undefined;
 }
