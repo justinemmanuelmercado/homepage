@@ -1,6 +1,6 @@
 import React from "react";
 import { QuickLink as QuickLinkInterface } from "../lib/api";
-import { FaTimes } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { getDomain } from "../lib/string";
 
 interface Props {
@@ -31,41 +31,36 @@ const InnerLink = (props: Props): React.FunctionComponentElement<Props> => {
     const imgSrc = ql.thumbnail
         ? ql.thumbnail
         : "https://bulma.io/images/placeholders/128x128.png";
-    if (props.deleteMode) {
-        return (
-            <a
-                onClick={(): void => props.deleteQuickLink(ql)}
-                className="navbar-item"
-            >
-                <FaTimes /> {ql.name}
-            </a>
-        );
-    } else {
-        return (
-            <div>
-                <a href={ql.url}>
-                    <figure
-                        style={{
-                            height: "5rem",
-                            width: "5rem"
-                        }}
-                        className="quicklink-transition image is-1by1"
-                    >
-                        <img src={imgSrc} />
-                    </figure>
 
-                    <div
-                        style={{
-                            marginTop: "1rem",
-                            display: "flex",
-                            justifyContent: "center",
-                            width: "100%"
-                        }}
-                    >
-                        <small>{truncateText(domain, 50)}</small>
-                    </div>
-                </a>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <a href={ql.url}>
+                <figure
+                    style={{
+                        height: "5rem",
+                        width: "5rem"
+                    }}
+                    className="quicklink-transition image is-1by1"
+                >
+                    <img src={imgSrc} />
+                </figure>
+                <div
+                    style={{
+                        marginTop: "1rem",
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "100%"
+                    }}
+                >
+                    <small>{truncateText(domain, 50)}</small>
+                </div>
+            </a>
+            <button
+                className="delete-ql button"
+                onClick={(): void => props.deleteQuickLink(ql)}
+            >
+                <FaTrash size={8} />
+            </button>
+        </div>
+    );
 };
