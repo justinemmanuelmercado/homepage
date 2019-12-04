@@ -91,6 +91,7 @@ class DatabaseSeeder {
                 name: hacker.noun(),
                 url: internet.url()
             })
+            ql.thumbnail = random.image();
 
             qlPromises.push(qlRepository.save(ql));
             qlCount++;

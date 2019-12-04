@@ -9,6 +9,7 @@ interface BookmarkRowProps {
     checked: boolean;
     key?: string;
     onFinish: () => Promise<void>;
+    setTag: (tag: string) => void;
 }
 
 const redirect = (url: string, tab?: boolean): void => {
@@ -29,7 +30,7 @@ const truncateText = (text: string, length: number = 50): string => {
 };
 
 export const BookmarkRow = (props: BookmarkRowProps): React.ReactElement => {
-    const { bm } = props;
+    const { bm, setTag } = props;
     const [modalOpened, setModalOpened] = useState(false);
     let editableBookmark: NewBookmark | Bookmark;
     if (bm.tags) {
@@ -45,6 +46,7 @@ export const BookmarkRow = (props: BookmarkRowProps): React.ReactElement => {
         await putLinkEdit(newBookmark, 1);
         await props.onFinish();
     };
+
     return (
         <div
             key={bm.id}
@@ -82,9 +84,13 @@ export const BookmarkRow = (props: BookmarkRowProps): React.ReactElement => {
                   (tag, ind): React.ReactElement => {
                       return (
                           <small
+                              style={{
+                                  cursor: "pointer"
+                              }}
                               className="bookmark-tag"
                               key={ind}
                               id={ind.toString()}
+                              onClick={(): void => setTag(tag.tag)}
                           >
                               {tag.tag}{" "}
                           </small>
