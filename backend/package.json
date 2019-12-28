@@ -10,7 +10,8 @@
       "orm": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts",
       "db:seed": "ts-node ./scripts/seed-data.ts -u",
       "db:revert": "ts-node ./scripts/seed-data.ts -d",
-      "test": "mocha -r ts-node/register src/*.spec.ts src/**/*.spec.ts"
+      "test": "mocha -r ts-node/register src/*.spec.ts src/**/*.spec.ts",
+      "user:new": "ts-node ./scripts/insert-user.ts"
    },
    "repository": {
       "type": "git",

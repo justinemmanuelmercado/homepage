@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { Connection, createConnection, InsertResult } from "typeorm";
+import { Connection, createConnection } from "typeorm";
 import { QuickLink } from "../src/entity/QuickLink";
 import { Bookmark } from "../src/entity/Bookmark";
 import { BookmarkTag } from "../src/entity/BookmarkTag"
