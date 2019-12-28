@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { isURL } from "validator";
+
+import validator from "validator";
 
 import metascraper from 'metascraper';
 // @ts-ignore
@@ -71,7 +72,7 @@ export const GetMetadata = {
         return metadata;
     },
     validator: (url: string) => {
-        return isURL(url);
+        return validator.isURL(url);
     }
 
 };

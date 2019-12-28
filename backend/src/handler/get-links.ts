@@ -22,6 +22,7 @@ async function getLinks(type: Number, connection: Connection) {
 
 export const GetLinks = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
     const { type } = req.query;
+    
     if (isNaN(type)) {
         res.status(400);
         res.json({

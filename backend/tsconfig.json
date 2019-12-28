@@ -19,15 +19,16 @@
         "esModuleInterop": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "typeRoots" : ["./src/@types"]
+        "typeRoots": [
+            "./src/@types"
+        ],
+        "lib": [
+            "es2018",
+            "esnext.asynciterable"
+        ]
     },
     "include": [
         "src",
         "types"
-    ],
-    "lib": [
-        "es6",
-        "es2015",
-        "esnext.asynciterable"
     ]
 }

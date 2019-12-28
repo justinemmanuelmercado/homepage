@@ -1,7 +1,13 @@
 import axios from "axios";
 
+const { REACT_APP_PASSWORD = "", REACT_APP_USERNAME = "" } = process.env;
+
 const http = axios.create({
-    baseURL: process.env.REACT_APP_BACKEND_ROOT
+    baseURL: process.env.REACT_APP_BACKEND_ROOT,
+    auth: {
+        username: REACT_APP_USERNAME,
+        password: REACT_APP_PASSWORD 
+    }
 });
 
 export interface BookmarkTag {
