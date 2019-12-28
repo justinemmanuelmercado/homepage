@@ -7,7 +7,6 @@ import { Bookmark } from "../src/entity/Bookmark";
 import { BookmarkTag } from "../src/entity/BookmarkTag"
 import uuidv4 from "uuid/v4";
 import { internet, hacker, random } from "faker";
-import { randomBytes } from 'crypto';
 
 class DatabaseSeeder {
     private connection: Connection;

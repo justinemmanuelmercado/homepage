@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, PrimaryColumn, ManyToOne, JoinColumn } from "typeorm";
+import { User } from './User';
 
 export interface LinkConstructorArgs {
     id: string;
@@ -25,5 +26,9 @@ export class Link {
 
     @CreateDateColumn()
     dateCreated!: string;
+
+    @ManyToOne(() => User, { nullable: true })
+    @JoinColumn()
+    user!: string | User;
 
 }
