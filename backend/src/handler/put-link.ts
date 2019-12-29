@@ -6,7 +6,7 @@ import { BookmarkTag } from "../entity/BookmarkTag";
 // import { putLink } from "../db";
 import uuidv4 from "uuid/v4";
 
-async function putLink(body: any, connection: Connection) {
+async function putLink(body: any, connection: Connection, userId?: string) {
     let newLink: QuickLink | Bookmark;
     let linkId = uuidv4();
     if (body.type == 1) {
@@ -17,6 +17,9 @@ async function putLink(body: any, connection: Connection) {
         });
         newBookmark.note = body.note;
         newBookmark.thumbnail = body.thumbnail
+        if(userId){
+            newBookmark.user = userId;
+        }
         const savedLink = await connection.manager.save(newBookmark);
         if (body.tags.length > 0) {
             let newTags: { tag: string, bookmarkId: string }[] = [];
@@ -41,6 +44,9 @@ async function putLink(body: any, connection: Connection) {
         if (body.thumbnail) {
             newQuicklink.thumbnail = body.thumbnail
         }
+        if(userId){
+            newQuicklink.user = userId;
+        }
         await connection.manager.save(newQuicklink);
 
     } else {
@@ -56,7 +62,7 @@ export const PutLink = (connection: Connection) => async (req: Express.Request, 
         body: JSON.stringify('Successfully inserted object'),
     };
     try {
-        await putLink(req.body, connection);
+        await putLink(req.body, connection, req.user?.id);
         res.status(200);
         res.json({
             message: response

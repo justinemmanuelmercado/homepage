@@ -2,7 +2,7 @@
     "compilerOptions": {
         "module": "commonjs",
         // Target latest version of ECMAScript.
-        "target": "esnext",
+        "target": "es2018",
         // Search under node_modules for non-relative imports.
         "moduleResolution": "node",
         "outDir": "./lib",
@@ -29,6 +29,7 @@
     },
     "include": [
         "src",
-        "types"
+        "types",
+        "*/*.d.ts",
     ]
 }

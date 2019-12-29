@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express-serve-static-core'; ''
+import { Request, Response, NextFunction } from 'express';
 import { Connection } from 'typeorm';
 import { User } from './entity/User';
 
@@ -14,7 +14,11 @@ export const authentication = (connection: Connection) => async (req: Request, _
             },
             select: ["id"]
         });
-        console.log(user);
+        if (user) {
+            req.user = {
+                id: user.id
+            }
+        }
         next();
     }
 }

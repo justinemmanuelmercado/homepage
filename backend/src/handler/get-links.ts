@@ -3,26 +3,36 @@ import { Connection, ObjectType } from "typeorm";
 import { Bookmark } from "../entity/Bookmark";
 import { QuickLink } from "../entity/QuickLink";
 
-async function getLinks(type: Number, connection: Connection) {
+async function getLinks(type: Number, connection: Connection, userId?: string) {
     let entity: ObjectType<Bookmark | QuickLink>;
+    let queryBuilder;
     if (type === 1) {
         entity = Bookmark;
         let repo = connection.getRepository(entity);
-        return await repo.createQueryBuilder('bookmark')
-                        .leftJoinAndSelect('bookmark.tags', 'tags')
-                        .getMany();
+        queryBuilder = repo.createQueryBuilder('bookmark')
+            .leftJoin('bookmark.user', 'user')
+            .leftJoinAndSelect('bookmark.tags', 'tags')
     } else {
         entity = QuickLink;
         let repo = connection.getRepository(entity);
-        return await repo.find()
+        queryBuilder = repo.createQueryBuilder('ql')
+            .leftJoin('ql.user', 'user');
+
 
     }
+    if (userId) {
+        queryBuilder = queryBuilder.where("user.id = :userId", { userId });
+    } else {
+        queryBuilder = queryBuilder.where("user is null")
+    }
+    console.log(queryBuilder.getSql());
+    return await queryBuilder.getMany();
 }
 
 
 export const GetLinks = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
     const { type } = req.query;
-    
+
     if (isNaN(type)) {
         res.status(400);
         res.json({
@@ -39,7 +49,7 @@ export const GetLinks = (connection: Connection) => async (req: Express.Request,
             });
             return;
         }
-        const links = await getLinks(typeAsNum, connection);
+        const links = await getLinks(typeAsNum, connection, req.user?.id);
         res.status(200);
         res.json(links)
     } catch (e) {
