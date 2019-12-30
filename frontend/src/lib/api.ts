@@ -1,14 +1,22 @@
 import axios from "axios";
 
-const { REACT_APP_PASSWORD = "", REACT_APP_USERNAME = "" } = process.env;
-
 const http = axios.create({
-    baseURL: process.env.REACT_APP_BACKEND_ROOT,
-    auth: {
-        username: REACT_APP_USERNAME,
-        password: REACT_APP_PASSWORD 
-    }
+    baseURL: process.env.REACT_APP_BACKEND_ROOT
 });
+
+http.interceptors.request.use((config) => {
+    const username = localStorage.getItem("username");
+    const password = localStorage.getItem("password");
+    if (username && password) {
+        config.auth = {
+            username,
+            password
+        }
+    }
+
+    return config;
+})
+
 
 export interface BookmarkTag {
     bookmarkId: string;
@@ -154,11 +162,32 @@ export const putLinkEdit = async (
     }
 };
 
+export const saveCredentials = (username: string, password: string) => {
+    localStorage.setItem("username", username);
+    localStorage.setItem("password", password);
+    console.log(username, password);
+}
+
+export const checkCredentials = () => {
+    const isLoggedIn = (localStorage.getItem("username") && localStorage.getItem("password"));
+    if(!isLoggedIn){
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+    }
+
+    return isLoggedIn;
+}
+
+export const logout = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("password");
+}
+
 /* eslint-disable */
 export const getMetaData = async (
-  url: string
+    url: string
 ): Promise<{ data: Record<string, any> }> => {
-  /* eslint-enable */
+    /* eslint-enable */
 
     try {
         const metadata = await http.get(`/metadata/${url}`);
