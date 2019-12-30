@@ -1,7 +1,7 @@
 import React from "react";
 import { BookmarksTable } from "./BookmarksTable";
 import { NewBookmarkForm } from "./NewBookmarkForm";
-import { putLink, BaseBookmark, getBookmarks, getTags, Bookmark, NewBookmark, BookmarkTag } from "../lib/api";
+import { putLink, BaseBookmark, getBookmarks, Bookmark, NewBookmark } from "../lib/api";
 
 interface State {
     bookmarks: Bookmark[];

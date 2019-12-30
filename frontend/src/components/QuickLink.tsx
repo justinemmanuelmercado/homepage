@@ -42,7 +42,7 @@ const InnerLink = (props: Props): React.FunctionComponentElement<Props> => {
                     }}
                     className="quicklink-transition image is-1by1"
                 >
-                    <img src={imgSrc} />
+                    <img alt={ql.name} src={imgSrc} />
                 </figure>
                 <div
                     style={{

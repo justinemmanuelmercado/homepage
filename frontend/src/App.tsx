@@ -27,6 +27,7 @@ class App extends Component<{}, State> {
         const { selected } = this.state;
         return (
             <Layout>
+                
                 <Header
                     setSelected={this.setSelected}
                     pages={this.pages}

@@ -22,7 +22,7 @@ export const Header = (props: HeaderProps): React.ReactElement => {
                                 className={className}
                                 onClick={(): void => setSelected(id)}
                             >
-                                <a>
+                                <span className="tabs-link">
                                     <span className="icon">
                                         <Icon />
                                     </span>
@@ -30,7 +30,7 @@ export const Header = (props: HeaderProps): React.ReactElement => {
                                         {id[0].toUpperCase()}
                                         {id.substring(1)}
                                     </span>
-                                </a>
+                                </span>
                             </li>
                         );
                     }

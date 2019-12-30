@@ -12,7 +12,7 @@ import {
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import validator from "validator";
 
-interface Props {}
+interface Props { }
 interface State {
     quickLinks: QuickLinkInterface[];
     modalOpen: boolean;
@@ -115,11 +115,11 @@ export class QuickLinks extends React.Component<Props, State> {
 
         const goToPage = (page: number): void => {
             if (page < 0 || page > maxPage) return;
-            {
-                this.setState({
-                    currentPage: page
-                });
-            }
+
+            this.setState({
+                currentPage: page
+            });
+
         };
 
         return (
@@ -156,9 +156,9 @@ export class QuickLinks extends React.Component<Props, State> {
                             }}
                         >
                             <div className="pagination-button">
-                                <a onClick={(): void => goToPage(this.state.currentPage - 1)}>
+                                <span onClick={(): void => goToPage(this.state.currentPage - 1)}>
                                     <FaAngleLeft />
-                                </a>
+                                </span>
                             </div>
                             {filteredQuickLinks.map(
                                 (ql: QuickLinkInterface): React.ReactElement => {
@@ -174,9 +174,9 @@ export class QuickLinks extends React.Component<Props, State> {
                                 }
                             )}
                             <div className="pagination-button">
-                                <a onClick={(): void => goToPage(this.state.currentPage + 1)}>
+                                <span onClick={(): void => goToPage(this.state.currentPage + 1)}>
                                     <FaAngleRight />
-                                </a>
+                                </span>
                             </div>
                         </div>
                     </div>

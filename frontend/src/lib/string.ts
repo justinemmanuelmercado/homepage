@@ -16,7 +16,7 @@ export function getDomain(url: string): string {
                 domain = parts[1] + "." + parts[0];
 
                 if (
-                    hostName.toLowerCase().indexOf(".co.uk") != -1 &&
+                    hostName.toLowerCase().indexOf(".co.uk") !== -1 &&
           parts.length > 2
                 ) {
                     domain = parts[2] + "." + domain;

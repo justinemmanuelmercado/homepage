@@ -93,9 +93,9 @@ export class BookmarksTable extends React.Component<Props, State> {
 
                 matchTag = Boolean(
                     bookmark.tags &&
-            bookmark.tags.some(bmTag => {
-                return bmTag.tag.toLowerCase() === tag.toLowerCase();
-            })
+                    bookmark.tags.some(bmTag => {
+                        return bmTag.tag.toLowerCase() === tag.toLowerCase();
+                    })
                 );
 
                 return (matchQuery || !query) && (matchTag || !tag);
@@ -143,11 +143,9 @@ export class BookmarksTable extends React.Component<Props, State> {
         if (!this.renderMaxPage(bookmarksLength)) return <></>;
         const goToPage = (page: number): void => {
             if (page < 0 || page >= this.renderMaxPage(bookmarksLength)) return;
-            {
-                this.setState({
-                    currentPage: page
-                });
-            }
+            this.setState({
+                currentPage: page
+            });
         };
 
         return (
@@ -162,39 +160,39 @@ export class BookmarksTable extends React.Component<Props, State> {
                 >
                     <FaTrash />
                 </button>
-                <a
+                <span
                     className="pagination-previous"
                     onClick={() => goToPage(this.state.currentPage - 1)}
                 >
                     <FaAngleLeft />
-                </a>
-                <a
+                </span>
+                <span
                     className="pagination-next"
                     onClick={() => goToPage(this.state.currentPage + 1)}
                 >
                     <FaAngleRight />
-                </a>
+                </span>
                 <ul className="pagination-list">
                     {Array.from(Array(this.renderMaxPage(bookmarksLength)).keys()).map(
                         num => {
                             if (num === this.state.currentPage) {
                                 return (
                                     <li key={num}>
-                                        <a className="pagination-link is-current" key={num}>
+                                        <span className="pagination-link is-current" key={num}>
                                             {num + 1}
-                                        </a>
+                                        </span>
                                     </li>
                                 );
                             } else {
                                 return (
                                     <li key={num}>
-                                        <a
+                                        <span
                                             key={num}
                                             onClick={() => goToPage(num)}
                                             className="pagination-link"
                                         >
                                             {num + 1}
-                                        </a>
+                                        </span>
                                     </li>
                                 );
                             }
@@ -260,7 +258,7 @@ export class BookmarksTable extends React.Component<Props, State> {
                             className="button is-fullwidth"
                             onClick={() => this.props.toggleModal(true)}
                         >
-              Add Bookmark
+                            Add Bookmark
                         </button>
                     </div>
                 </div>

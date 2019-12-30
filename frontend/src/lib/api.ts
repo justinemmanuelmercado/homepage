@@ -51,6 +51,10 @@ export interface QuickLink extends BaseQuickLink {
     [key: string]: string[] | string | undefined;
 }
 
+/**
+ * This is outdated. Previous version of this project children links for
+ * quicklinks.
+ */
 export interface NewQuickLink extends BaseQuickLink {
     children: [string, string][];
 }

@@ -25,7 +25,6 @@ async function getLinks(type: Number, connection: Connection, userId?: string) {
     } else {
         queryBuilder = queryBuilder.where("user is null")
     }
-    console.log(queryBuilder.getSql());
     return await queryBuilder.getMany();
 }
 
