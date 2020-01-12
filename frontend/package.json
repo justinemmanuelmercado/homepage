@@ -74,7 +74,6 @@
   "resolutions": {
     "react-router": "4.3.1",
     "**/**/tar": "^4.4.2",
-    "**/**/handlebars": ">=4.5.2",
-    "**/**/fsevents": "^2.1.0"
+    "**/**/handlebars": ">=4.5.2"
   }
 }
