@@ -49,11 +49,6 @@ export const GetMetadata = {
     },
     scrape: async (url: string) => {
         ;
-        const response = await fetch(url);
-        const html = await response.text();
-        const doc = domino.createWindow(html).document;
-        // const metadata = getMetadata(doc, url);
-
         const { body, url: gotUrl } = await got(url);
         const scraper = metascraper([
             metascraperAuthor(),

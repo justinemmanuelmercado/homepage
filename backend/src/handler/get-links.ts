@@ -12,11 +12,17 @@ async function getLinks(type: Number, connection: Connection, userId?: string) {
         queryBuilder = repo.createQueryBuilder('bookmark')
             .leftJoin('bookmark.user', 'user')
             .leftJoinAndSelect('bookmark.tags', 'tags')
+            .orderBy({
+                [`bookmark.dateCreated`]: "DESC",
+            });
     } else {
         entity = QuickLink;
         let repo = connection.getRepository(entity);
         queryBuilder = repo.createQueryBuilder('ql')
-            .leftJoin('ql.user', 'user');
+            .leftJoin('ql.user', 'user')
+            .orderBy({
+                [`ql.dateCreated`]: "DESC",
+            });;
 
 
     }
