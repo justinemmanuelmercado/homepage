@@ -11,8 +11,12 @@ import {
 } from "../lib/api";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import validator from "validator";
+import { GlobalHotKeys } from "react-hotkeys";
+import { redirect } from "../lib/links";
 
-interface Props {}
+interface Props {
+  selected: boolean;
+}
 interface State {
   quickLinks: QuickLinkInterface[];
   modalOpen: boolean;
@@ -23,8 +27,10 @@ interface State {
   formWidth: string;
   quicklink: BaseQuickLink;
   formLoading: boolean;
+  filteredQuickLinks: QuickLinkInterface[];
 }
 
+const Q_TO_T_STRING_ARRAY = ["q", "w", "e", "r", "t"];
 const MAX_ITEMS_WIDE = 5;
 const MAX_ITEMS_MOBILE = 3;
 const LINKS_WIDTH_WIDE = 600;
@@ -47,10 +53,12 @@ export class QuickLinks extends React.Component<Props, State> {
     currentPage: 0,
     containerWidth: LINKS_WIDTH_WIDE,
     formWidth: FORM_WIDTH_WIDE,
-    quicklink: BLANK_QL
+    quicklink: BLANK_QL,
+    filteredQuickLinks: []
   };
 
-  private renderMaxPage(length: number): number {
+  private renderMaxPage(): number {
+    const length = this.state.quickLinks.length;
     return Math.ceil(length / this.state.items);
   }
 
@@ -107,24 +115,74 @@ export class QuickLinks extends React.Component<Props, State> {
     }
   };
 
-  public render(): React.ReactElement {
-    const { quickLinks, currentPage, items, formWidth, formLoading } = this.state;
+  private keyMap = {
+    NEXT: "right",
+    PREV: "left",
+    OPEN_PAGE: [
+      ...Q_TO_T_STRING_ARRAY,
+      ...Q_TO_T_STRING_ARRAY.map(n => `shift+${n}`)
+    ]
+  };
+
+  private handlers = {
+    PREV: (): void => {
+      this.goToPage(this.state.currentPage - 1);
+    },
+    NEXT: (): void => {
+      this.goToPage(this.state.currentPage + 1);
+    },
+    OPEN_PAGE: (evt?: KeyboardEvent) => {
+      if (evt) {
+        const withShift = evt.shiftKey;
+        const keyPressed = evt.key.toLowerCase();
+        let ind = 0;
+        Q_TO_T_STRING_ARRAY.some((v, i) => {
+          if (v === keyPressed) {
+            ind = i;
+          }
+          return v === keyPressed;
+        });
+
+        const { url } = this.state.quickLinks[ind];
+        redirect(url, withShift);
+        console.log(evt);
+      }
+    }
+  };
+
+  private goToPage = (page: number): void => {
+    if (page < 0 || page > this.renderMaxPage() - 1) return;
+
+    this.setState({
+      currentPage: page
+    });
+  };
+
+  private filteredQuickLinks = (): QuickLinkInterface[] => {
+    const { quickLinks, currentPage, items } = this.state;
     const start = currentPage * items;
     const end = start + items;
-    const length = quickLinks.length;
-    const maxPage = Math.ceil(length / items) - 1;
-    const filteredQuickLinks = quickLinks.slice(start, end);
+    return quickLinks.slice(start, end);
+  };
 
-    const goToPage = (page: number): void => {
-      if (page < 0 || page > maxPage) return;
+  private loadFilteredQuickLinks = () => {
+    this.setState({
+      filteredQuickLinks: this.filteredQuickLinks()
+    });
+  };
 
-      this.setState({
-        currentPage: page
-      });
-    };
+  public render(): React.ReactElement {
+    const { formWidth, formLoading, filteredQuickLinks } = this.state;
+    // const filteredQuickLinks = this.filteredQuickLinks()
 
     return (
       <div className="container">
+        {this.props.selected && (
+          <GlobalHotKeys
+            handlers={this.handlers}
+            keyMap={this.keyMap}
+          ></GlobalHotKeys>
+        )}
         <div className="section">
           <div>
             <div className="column">
@@ -161,7 +219,9 @@ export class QuickLinks extends React.Component<Props, State> {
             >
               <div className="pagination-button">
                 <span
-                  onClick={(): void => goToPage(this.state.currentPage - 1)}
+                  onClick={(): void =>
+                    this.goToPage(this.state.currentPage - 1)
+                  }
                 >
                   <FaAngleLeft />
                 </span>
@@ -169,7 +229,7 @@ export class QuickLinks extends React.Component<Props, State> {
               {filteredQuickLinks.map(
                 (ql: QuickLinkInterface): React.ReactElement => {
                   return (
-                    <div style={{ margin: "0 0.8rem" }} key={ql.url}>
+                    <div style={{ margin: "0 0.8rem" }} key={ql.id}>
                       <QuickLink
                         link={ql}
                         deleteMode={this.state.deleteMode}
@@ -181,7 +241,9 @@ export class QuickLinks extends React.Component<Props, State> {
               )}
               <div className="pagination-button">
                 <span
-                  onClick={(): void => goToPage(this.state.currentPage + 1)}
+                  onClick={(): void =>
+                    this.goToPage(this.state.currentPage + 1)
+                  }
                 >
                   <FaAngleRight />
                 </span>
@@ -198,28 +260,19 @@ export class QuickLinks extends React.Component<Props, State> {
     await this.loadQuickLinks();
   };
 
-  private toggleDeleteMode = (): void => {
-    this.setState({
-      deleteMode: !this.state.deleteMode
-    });
-  };
-
   private handleSubmit = async (): Promise<void> => {
     const { quicklink } = this.state;
     await putLink(quicklink, 2);
     await this.loadQuickLinks();
   };
 
-  private toggleModal = (val: boolean): void => {
-    this.setState({
-      modalOpen: val
-    });
-  };
-
   private loadQuickLinks = async (): Promise<void> => {
     const ql = await getQuickLinks();
-    this.setState({
-      quickLinks: ql
-    });
+    this.setState(
+      {
+        quickLinks: ql
+      },
+      this.loadFilteredQuickLinks
+    );
   };
 }

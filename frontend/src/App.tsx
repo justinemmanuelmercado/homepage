@@ -6,6 +6,7 @@ import { QuickLinks } from "./components/QuickLinks";
 import { Header } from "./components/Header";
 import { FaBookmark, FaStar } from "react-icons/fa";
 import { checkCredentials } from "./lib/api";
+import { GlobalHotKeys } from "react-hotkeys";
 
 interface State {
   selected: string;
@@ -39,36 +40,54 @@ class App extends Component<{}, State> {
   private setLoggedIn = (value: boolean) => {
     this.setState({ loggedIn: value });
   };
+
+  private keyMap = {
+    GOTO_BOOKMARK: ["alt+b"],
+    GOTO_FAVORITES: ["alt+f"]
+  };
+
+  private handlers = {
+    GOTO_BOOKMARK: () => {
+      this.setSelected("bookmarks");
+    },
+    GOTO_FAVORITES: () => {
+      this.setSelected("favorites");
+    }
+  };
+
   public render(): React.ReactElement {
     const { selected } = this.state;
+    const favoritesSelected = selected === "favorites";
     return (
       <Layout>
-        <AuthContext.Provider
-          value={{
-            loggedIn: this.state.loggedIn,
-            setLoggedIn: this.setLoggedIn
-          }}
-        >
-          <Header
-            setSelected={this.setSelected}
-            pages={this.pages}
-            selected={selected}
-          />
-          <div
-            style={{
-              display: selected === "favorites" ? "block" : "none"
+        <GlobalHotKeys handlers={this.handlers} keyMap={this.keyMap}>
+          <AuthContext.Provider
+            value={{
+              loggedIn: this.state.loggedIn,
+              setLoggedIn: this.setLoggedIn
             }}
           >
-            <QuickLinks />
-          </div>
-          <div
-            style={{
-              display: selected === "bookmarks" ? "block" : "none"
-            }}
-          >
-            <Bookmarks />
-          </div>
-        </AuthContext.Provider>
+            <Header
+              setSelected={this.setSelected}
+              pages={this.pages}
+              selected={selected}
+            />
+            <div
+              style={{
+                display: favoritesSelected ? "block" : "none"
+              }}
+            >
+              <QuickLinks selected={favoritesSelected} />
+            </div>
+            <div
+              style={{
+                display: !favoritesSelected ? "block" : "none"
+              }}
+            >
+              <Bookmarks selected={!favoritesSelected} />
+            </div>
+          </AuthContext.Provider>
+        </GlobalHotKeys>
       </Layout>
     );
   }
