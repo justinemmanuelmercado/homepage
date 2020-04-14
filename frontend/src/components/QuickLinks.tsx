@@ -13,6 +13,7 @@ import AwesomeDebouncePromise from "awesome-debounce-promise";
 import validator from "validator";
 import { GlobalHotKeys } from "react-hotkeys";
 import { redirect } from "../lib/links";
+import { generalMovement, OPEN_LINK_SHORTCUT_KEYS } from "../lib/shortcut";
 
 interface Props {
   selected: boolean;
@@ -30,7 +31,6 @@ interface State {
   filteredQuickLinks: QuickLinkInterface[];
 }
 
-const Q_TO_T_STRING_ARRAY = ["q", "w", "e", "r", "t"];
 const MAX_ITEMS_WIDE = 5;
 const MAX_ITEMS_MOBILE = 3;
 const LINKS_WIDTH_WIDE = 600;
@@ -116,12 +116,7 @@ export class QuickLinks extends React.Component<Props, State> {
   };
 
   private keyMap = {
-    NEXT: "right",
-    PREV: "left",
-    OPEN_PAGE: [
-      ...Q_TO_T_STRING_ARRAY,
-      ...Q_TO_T_STRING_ARRAY.map(n => `shift+${n}`)
-    ]
+    ...generalMovement
   };
 
   private handlers = {
@@ -136,14 +131,14 @@ export class QuickLinks extends React.Component<Props, State> {
         const withShift = evt.shiftKey;
         const keyPressed = evt.key.toLowerCase();
         let ind = 0;
-        Q_TO_T_STRING_ARRAY.some((v, i) => {
+        OPEN_LINK_SHORTCUT_KEYS.some((v, i) => {
           if (v === keyPressed) {
             ind = i;
           }
           return v === keyPressed;
         });
 
-        const { url } = this.state.quickLinks[ind];
+        const { url } = this.state.filteredQuickLinks[ind];
         redirect(url, withShift);
         console.log(evt);
       }
@@ -153,9 +148,12 @@ export class QuickLinks extends React.Component<Props, State> {
   private goToPage = (page: number): void => {
     if (page < 0 || page > this.renderMaxPage() - 1) return;
 
-    this.setState({
-      currentPage: page
-    });
+    this.setState(
+      {
+        currentPage: page
+      },
+      this.loadFilteredQuickLinks
+    );
   };
 
   private filteredQuickLinks = (): QuickLinkInterface[] => {
@@ -173,7 +171,6 @@ export class QuickLinks extends React.Component<Props, State> {
 
   public render(): React.ReactElement {
     const { formWidth, formLoading, filteredQuickLinks } = this.state;
-    // const filteredQuickLinks = this.filteredQuickLinks()
 
     return (
       <div className="container">

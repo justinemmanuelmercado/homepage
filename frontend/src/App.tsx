@@ -42,8 +42,8 @@ class App extends Component<{}, State> {
   };
 
   private keyMap = {
-    GOTO_BOOKMARK: ["alt+b"],
-    GOTO_FAVORITES: ["alt+f"]
+    GOTO_FAVORITES: ["up", "w"],
+    GOTO_BOOKMARK: ["down", "s"]
   };
 
   private handlers = {

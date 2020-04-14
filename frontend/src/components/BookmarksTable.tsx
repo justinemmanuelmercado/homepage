@@ -5,6 +5,7 @@ import { Bookmark, deleteBookmarks, getTags, BookmarkTag } from "../lib/api";
 import { BookmarkRow } from "./BookmarkRow";
 import { GlobalHotKeys } from "react-hotkeys";
 import { redirect } from "../lib/links";
+import { generalMovement, OPEN_LINK_SHORTCUT_KEYS } from "../lib/shortcut";
 interface Props {
   toggleModal: (val: boolean, bookmark?: Bookmark) => void;
   items: number;
@@ -20,9 +21,9 @@ interface Props {
 //     }
 //     return iStr;
 // })];
-const Q_TO_T_STRING_ARRAY = ["q", "w", "e", "r", "t"];
 
 interface State {
+  paginatedFilteredBookmarks: Bookmark[];
   filteredBookmarks: Bookmark[];
   currentPage: number;
   toDelete: string[];
@@ -42,16 +43,19 @@ export class BookmarksTable extends React.Component<Props, State> {
       tags: [],
       tag: "",
       query: "",
-      filteredBookmarks: []
+      filteredBookmarks: [],
+      paginatedFilteredBookmarks: []
     };
   }
 
   public async componentDidMount() {
     const tags = await getTags();
-    this.setState({
-      tags,
-      filteredBookmarks: this.getFilteredRows()
-    });
+    this.setState(
+      {
+        tags
+      },
+      this.loadFilteredBookmarks
+    );
   }
 
   private renderMaxPage(): number {
@@ -127,10 +131,6 @@ export class BookmarksTable extends React.Component<Props, State> {
       return <div className="notification is-info">Unable to load links</div>;
     }
 
-    const start = this.state.currentPage * this.props.items;
-    const end = start + this.props.items;
-    rows = rows.slice(start, end);
-
     return rows.map((bm: Bookmark) => {
       return (
         <BookmarkRow
@@ -147,9 +147,12 @@ export class BookmarksTable extends React.Component<Props, State> {
 
   private goToPage = (page: number): void => {
     if (page < 0 || page >= this.renderMaxPage()) return;
-    this.setState({
-      currentPage: page
-    });
+    this.setState(
+      {
+        currentPage: page
+      },
+      this.loadFilteredBookmarks
+    );
   };
 
   private renderPageNumbers(bookmarksLength: number): React.ReactElement {
@@ -293,18 +296,19 @@ export class BookmarksTable extends React.Component<Props, State> {
   };
 
   private loadFilteredBookmarks() {
+    const filteredBookmarks = this.getFilteredRows();
+    const start = this.state.currentPage * this.props.items;
+    const end = start + this.props.items;
+    const paginatedFilteredBookmarks = filteredBookmarks.slice(start, end);
+    console.log(start, end);
     this.setState({
-      filteredBookmarks: this.getFilteredRows()
+      filteredBookmarks,
+      paginatedFilteredBookmarks
     });
   }
 
   private keyMap = {
-    NEXT: "right",
-    PREV: "left",
-    OPEN_PAGE: [
-      ...Q_TO_T_STRING_ARRAY,
-      ...Q_TO_T_STRING_ARRAY.map(n => `shift+${n}`)
-    ]
+    ...generalMovement
   };
 
   private handlers = {
@@ -319,14 +323,14 @@ export class BookmarksTable extends React.Component<Props, State> {
         const withShift = evt.shiftKey;
         const keyPressed = evt.key.toLowerCase();
         let ind = 0;
-        Q_TO_T_STRING_ARRAY.some((v, i) => {
+        OPEN_LINK_SHORTCUT_KEYS.some((v, i) => {
           if (v === keyPressed) {
             ind = i;
           }
           return v === keyPressed;
         });
 
-        const { url } = this.state.filteredBookmarks[ind];
+        const { url } = this.state.paginatedFilteredBookmarks[ind];
         redirect(url, withShift);
         console.log(evt);
       }
@@ -334,7 +338,7 @@ export class BookmarksTable extends React.Component<Props, State> {
   };
 
   public render(): React.ReactElement {
-    const rows = this.state.filteredBookmarks;
+    const rows = this.state.paginatedFilteredBookmarks;
     return (
       <div className="container">
         {this.props.selected && (
