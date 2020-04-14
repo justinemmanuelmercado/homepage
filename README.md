@@ -8,7 +8,7 @@ Built with
 * node/express
 * typescript
 * postgres
-* love
+* love and care
 
 ## BMs and QLs
 ### QLs
@@ -27,6 +27,14 @@ Built with
 
 ### Prereqs
 node/npm/typescript/postgres/docker
+
+### Instructions
+1. Clone this repo
+2. Fill in the `.env` of both `/frontend` and `/backend` using their respective `.env.example` files
+3. Fill in the `.docker-compose.yml` file in `/backend` using the `.docker-compose.yml.example` file
+4. Run `sh deploy.sh` in `/`
+
+@todo Test this out on a new system
 
 ## Site Usage
 ### Shortcut keys
@@ -62,10 +70,15 @@ z* Left - Right: Next and previous page
 
 ### Navigation
 #### QLs tab
+
+@todo
+
 #### BMs tab
 
+@todo
+
 ## User accounts
-**As of now** there is no way to add new accounts without running a command throug `npm`.
+**As of now** there is no way to add new accounts without running a command through `npm` or manually inserting into the DB.
 
 ### Creating Accounts manually through npm
 *If you want to have your own account on my currently running instance of homepage, feel free to send me a message with your preferred `username` and `password`. Be aware though that links will be stored in plaintext, which means **I CAN SEE EVERYTHING YOU SAVE***
