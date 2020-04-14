@@ -36,9 +36,10 @@ async function getLinks(type: Number, connection: Connection, userId?: string) {
 
 
 export const GetLinks = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
-    const { type } = req.query;
+    const type = req.query.type;
 
-    if (isNaN(type)) {
+
+    if (typeof type !== "string" || isNaN(parseInt(type))) {
         res.status(400);
         res.json({
             body: `${type} must be a number`
