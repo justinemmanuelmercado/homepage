@@ -66,14 +66,17 @@ export class NewBookmarkForm extends React.Component<Props, State> {
         evt.persist();
         const { data } = await this.debounced(url);
         this.setState(currentState => {
-          const { newBookmark: bm } = currentState;
-          bm.thumbnail = data.thumbnail ? data.thumbnail : "";
-          bm.note =
-            data.description && bm.note.length < 2 ? data.description : "";
-          bm.name = data.title && bm.name.length < 2 ? data.title : "";
-          bm.thumbnail = data.image ? data.image : "";
+          const { newBookmark } = currentState;
+          newBookmark.thumbnail = data.thumbnail ? data.thumbnail : "";
+          newBookmark.note =
+            data.description && newBookmark.note.length < 2
+              ? data.description
+              : "";
+          newBookmark.name =
+            data.title && newBookmark.name.length < 2 ? data.title : "";
+          newBookmark.thumbnail = data.image ? data.image : "";
           return {
-            newBookmark: bm,
+            newBookmark,
             loading: false
           };
         });
@@ -102,21 +105,16 @@ export class NewBookmarkForm extends React.Component<Props, State> {
   };
 
   public render(): React.ReactElement {
-    const bm = this.state.newBookmark;
+    const { loading, newBookmark } = this.state;
     if (!this.props.isOpen) return <></>;
     const footer = (
       <div>
-        <button
-          disabled={this.state.loading}
-          onClick={this.handleSubmit}
-          className={`button ${this.state.loading && "is-loading"}`}
-        >
+        <button onClick={this.handleSubmit} className={`button`}>
           Save
         </button>
         <button
-          disabled={this.state.loading}
           onClick={(): void => this.props.toggleModal(false)}
-          className={`button ${this.state.loading && "is-loading"}`}
+          className={`button`}
         >
           Cancel
         </button>
@@ -134,18 +132,18 @@ export class NewBookmarkForm extends React.Component<Props, State> {
               <figure className="is-marginless image is-128x128">
                 <img
                   src={
-                    bm.thumbnail
-                      ? bm.thumbnail
+                    newBookmark.thumbnail
+                      ? newBookmark.thumbnail
                       : "https://via.placeholder.com/150"
                   }
                   alt="Link thumbnail"
                 />
               </figure>
               <div className="field">
-                <div className="control">
+                <div className={`control ${loading ? "is-loading" : ""}`}>
                   <input
                     disabled={true}
-                    value={bm.thumbnail}
+                    value={newBookmark.thumbnail}
                     onChange={this.handleInputChange}
                     id="thumbnail"
                     className="input"
@@ -157,9 +155,9 @@ export class NewBookmarkForm extends React.Component<Props, State> {
             <div className="column">
               <div className="field">
                 <label className="label">URL</label>
-                <div className="control">
+                <div className={`control`}>
                   <input
-                    value={bm.url}
+                    value={newBookmark.url}
                     onChange={this.handleUrlChange}
                     id="url"
                     className="input"
@@ -169,9 +167,9 @@ export class NewBookmarkForm extends React.Component<Props, State> {
               </div>
               <div className="field">
                 <label className="label">Name</label>
-                <div className="control">
+                <div className={`control ${loading ? "is-loading" : ""}`}>
                   <input
-                    value={bm.name}
+                    value={newBookmark.name}
                     onChange={this.handleInputChange}
                     id="name"
                     className="input"
@@ -183,9 +181,9 @@ export class NewBookmarkForm extends React.Component<Props, State> {
           </div>
           <div className="field">
             <label className="label">Note</label>
-            <div className="control">
+            <div className={`control ${loading ? "is-loading" : ""}`}>
               <textarea
-                value={bm.note}
+                value={newBookmark.note}
                 onChange={this.handleInputChange}
                 id="note"
                 className="textarea"
@@ -194,7 +192,10 @@ export class NewBookmarkForm extends React.Component<Props, State> {
           </div>
           <div className="field">
             <label className="label">Tags</label>
-            <ChipsInput chips={bm.tags} onChange={this.handleSetChips} />
+            <ChipsInput
+              chips={newBookmark.tags}
+              onChange={this.handleSetChips}
+            />
           </div>
         </div>
       </Modal>

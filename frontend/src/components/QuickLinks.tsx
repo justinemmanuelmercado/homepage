@@ -140,7 +140,6 @@ export class QuickLinks extends React.Component<Props, State> {
 
         const { url } = this.state.filteredQuickLinks[ind];
         redirect(url, withShift);
-        console.log(evt);
       }
     }
   };

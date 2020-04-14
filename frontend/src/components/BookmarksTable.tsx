@@ -291,7 +291,6 @@ export class BookmarksTable extends React.Component<Props, State> {
     const start = this.state.currentPage * this.props.items;
     const end = start + this.props.items;
     const paginatedFilteredBookmarks = filteredBookmarks.slice(start, end);
-    console.log(start, end);
     this.setState({
       filteredBookmarks,
       paginatedFilteredBookmarks
@@ -323,7 +322,6 @@ export class BookmarksTable extends React.Component<Props, State> {
 
         const { url } = this.state.paginatedFilteredBookmarks[ind];
         redirect(url, withShift);
-        console.log(evt);
       }
     }
   };
