@@ -13,15 +13,6 @@ interface Props {
   bookmarks: Bookmark[];
   selected: boolean;
 }
-
-// const ONE_TO_TEN_STRING_ARRAY: string[] = [...[ ...Array(9).keys() ].map( i => {
-//     let iStr = (i+1).toString();
-//     if(iStr.length > 1){
-//         iStr = `${iStr[0]} ${[iStr[1]]}`
-//     }
-//     return iStr;
-// })];
-
 interface State {
   paginatedFilteredBookmarks: Bookmark[];
   filteredBookmarks: Bookmark[];
