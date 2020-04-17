@@ -311,13 +311,14 @@ export class BookmarksTable extends React.Component<Props, State> {
     OPEN_PAGE: (evt?: KeyboardEvent) => {
       if (evt) {
         const withShift = evt.shiftKey;
-        const keyPressed = evt.key.toLowerCase();
+        const keyPressed = evt.code;
         let ind = 0;
         OPEN_LINK_SHORTCUT_KEYS.some((v, i) => {
-          if (v === keyPressed) {
+          const keyCode = v.code;
+          if (keyCode === keyPressed) {
             ind = i;
           }
-          return v === keyPressed;
+          return keyCode === keyPressed;
         });
 
         const { url } = this.state.paginatedFilteredBookmarks[ind];
