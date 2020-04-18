@@ -184,27 +184,30 @@ export class QuickLinks extends React.Component<Props, State> {
           <div>
             <div className="column">
               <div>
-                <div
-                  className="field has-addons is-horizontal"
-                  style={{ justifyContent: "center" }}
-                >
+                <form onSubmit={this.handleSubmit}>
                   <div
-                    className={`control ${formLoading ? "is-loading" : ""}`}
-                    style={{ width: formWidth }}
+                    className="field has-addons is-horizontal"
+                    style={{ justifyContent: "center" }}
                   >
-                    <input
-                      onChange={this.handleUrlChange}
-                      className="input"
-                      type="text"
-                      placeholder="https://www.example.com"
-                    />
+                    <div
+                      className={`control ${formLoading ? "is-loading" : ""}`}
+                      style={{ width: formWidth }}
+                    >
+                      <input
+                        value={this.state.quicklink.url}
+                        onChange={this.handleUrlChange}
+                        className="input"
+                        type="text"
+                        placeholder="https://www.example.com"
+                      />
+                    </div>
+                    <div className="control">
+                      <button type="submit" className="button">
+                        <FaPlus />
+                      </button>
+                    </div>
                   </div>
-                  <div className="control">
-                    <button className="button" onClick={this.handleSubmit}>
-                      <FaPlus />
-                    </button>
-                  </div>
-                </div>
+                </form>
               </div>
             </div>
             <div
@@ -257,10 +260,16 @@ export class QuickLinks extends React.Component<Props, State> {
     await this.loadQuickLinks();
   };
 
-  private handleSubmit = async (): Promise<void> => {
+  private handleSubmit = async (
+    evt: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    evt.preventDefault();
     const { quicklink } = this.state;
     await putLink(quicklink, 2);
     await this.loadQuickLinks();
+    this.setState({
+      quicklink: BLANK_QL
+    });
   };
 
   private loadQuickLinks = async (): Promise<void> => {

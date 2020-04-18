@@ -67,14 +67,19 @@ export class NewBookmarkForm extends React.Component<Props, State> {
         const { data } = await this.debounced(url);
         this.setState(currentState => {
           const { newBookmark } = currentState;
-          newBookmark.thumbnail = data.thumbnail ? data.thumbnail : "";
           newBookmark.note =
             data.description && newBookmark.note.length < 2
               ? data.description
-              : "";
+              : newBookmark.note;
           newBookmark.name =
-            data.title && newBookmark.name.length < 2 ? data.title : "";
-          newBookmark.thumbnail = data.image ? data.image : "";
+            data.title && newBookmark.name.length < 2
+              ? data.title
+              : newBookmark.name;
+          newBookmark.thumbnail = data.image
+            ? data.image
+            : data.thumbnail
+            ? data.thumbnail
+            : "";
           return {
             newBookmark,
             loading: false
@@ -96,11 +101,17 @@ export class NewBookmarkForm extends React.Component<Props, State> {
     });
   };
 
-  private handleSubmit = async (): Promise<void> => {
+  private handleSubmit = async (
+    evt: React.FormEvent<HTMLFormElement> | any
+  ): Promise<void> => {
+    evt.preventDefault();
     const { newBookmark } = this.state;
     this.setState({ loading: true });
     this.props.handleSubmit(newBookmark);
-    this.setState({ loading: false });
+    this.setState({
+      loading: false,
+      newBookmark: blankBookmark
+    });
     this.props.toggleModal(false);
   };
 
@@ -109,7 +120,7 @@ export class NewBookmarkForm extends React.Component<Props, State> {
     if (!this.props.isOpen) return <></>;
     const footer = (
       <div>
-        <button onClick={this.handleSubmit} className={`button`}>
+        <button onClick={this.handleSubmit} type="submit" className={`button`}>
           Save
         </button>
         <button
@@ -121,84 +132,86 @@ export class NewBookmarkForm extends React.Component<Props, State> {
       </div>
     );
     return (
-      <Modal
-        footer={footer}
-        handleClose={(): void => this.props.toggleModal(false)}
-        title={"Bookmark"}
-      >
-        <div className="form">
-          <div className="columns">
-            <div className="column">
-              <figure className="is-marginless image is-128x128">
-                <img
-                  src={
-                    newBookmark.thumbnail
-                      ? newBookmark.thumbnail
-                      : "https://via.placeholder.com/150"
-                  }
-                  alt="Link thumbnail"
+      <form onSubmit={this.handleSubmit}>
+        <Modal
+          footer={footer}
+          handleClose={(): void => this.props.toggleModal(false)}
+          title={"Bookmark"}
+        >
+          <div className="form">
+            <div className="columns">
+              <div className="column">
+                <figure className="is-marginless image is-128x128">
+                  <img
+                    src={
+                      newBookmark.thumbnail
+                        ? newBookmark.thumbnail
+                        : "https://via.placeholder.com/150"
+                    }
+                    alt="Link thumbnail"
+                  />
+                </figure>
+                <div className="field">
+                  <div className={`control ${loading ? "is-loading" : ""}`}>
+                    <input
+                      disabled={true}
+                      value={newBookmark.thumbnail}
+                      onChange={this.handleInputChange}
+                      id="thumbnail"
+                      className="input"
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="column">
+                <div className="field">
+                  <label className="label">URL</label>
+                  <div className={`control`}>
+                    <input
+                      value={newBookmark.url}
+                      onChange={this.handleUrlChange}
+                      id="url"
+                      className="input"
+                      type="website"
+                    />
+                  </div>
+                </div>
+                <div className="field">
+                  <label className="label">Name</label>
+                  <div className={`control ${loading ? "is-loading" : ""}`}>
+                    <input
+                      value={newBookmark.name}
+                      onChange={this.handleInputChange}
+                      id="name"
+                      className="input"
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="field">
+              <label className="label">Note</label>
+              <div className={`control ${loading ? "is-loading" : ""}`}>
+                <textarea
+                  value={newBookmark.note}
+                  onChange={this.handleInputChange}
+                  id="note"
+                  className="textarea"
                 />
-              </figure>
-              <div className="field">
-                <div className={`control ${loading ? "is-loading" : ""}`}>
-                  <input
-                    disabled={true}
-                    value={newBookmark.thumbnail}
-                    onChange={this.handleInputChange}
-                    id="thumbnail"
-                    className="input"
-                    type="text"
-                  />
-                </div>
               </div>
             </div>
-            <div className="column">
-              <div className="field">
-                <label className="label">URL</label>
-                <div className={`control`}>
-                  <input
-                    value={newBookmark.url}
-                    onChange={this.handleUrlChange}
-                    id="url"
-                    className="input"
-                    type="website"
-                  />
-                </div>
-              </div>
-              <div className="field">
-                <label className="label">Name</label>
-                <div className={`control ${loading ? "is-loading" : ""}`}>
-                  <input
-                    value={newBookmark.name}
-                    onChange={this.handleInputChange}
-                    id="name"
-                    className="input"
-                    type="text"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="field">
-            <label className="label">Note</label>
-            <div className={`control ${loading ? "is-loading" : ""}`}>
-              <textarea
-                value={newBookmark.note}
-                onChange={this.handleInputChange}
-                id="note"
-                className="textarea"
+            <div className="field">
+              <label className="label">Tags</label>
+              <ChipsInput
+                chips={newBookmark.tags}
+                onChange={this.handleSetChips}
               />
             </div>
           </div>
-          <div className="field">
-            <label className="label">Tags</label>
-            <ChipsInput
-              chips={newBookmark.tags}
-              onChange={this.handleSetChips}
-            />
-          </div>
-        </div>
-      </Modal>
+        </Modal>
+      </form>
     );
   }
 }

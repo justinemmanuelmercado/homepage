@@ -39,6 +39,13 @@ export class BookmarksTable extends React.Component<Props, State> {
     };
   }
 
+  public componentDidUpdate(prevProps: Props) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.bookmarks.length !== prevProps.bookmarks.length) {
+      this.loadFilteredBookmarks();
+    }
+  }
+
   public async componentDidMount() {
     const tags = await getTags();
     this.setState(
@@ -228,6 +235,7 @@ export class BookmarksTable extends React.Component<Props, State> {
 
     await deleteBookmarks(this.state.toDelete, 1);
     await this.props.loadBookmarks();
+    this.loadFilteredBookmarks();
   };
 
   private renderFilters(): React.ReactNode {
@@ -329,6 +337,7 @@ export class BookmarksTable extends React.Component<Props, State> {
 
   public render(): React.ReactElement {
     const rows = this.state.paginatedFilteredBookmarks;
+
     return (
       <div className="container">
         {this.props.selected && (
