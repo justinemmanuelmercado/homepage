@@ -19,6 +19,6 @@ export const authentication = (connection: Connection) => async (req: Request, _
                 id: user.id
             }
         }
-        next();
     }
+    next();
 }

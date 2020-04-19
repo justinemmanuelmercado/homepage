@@ -9,27 +9,29 @@ async function getLinks(type: Number, connection: Connection, userId?: string) {
     if (type === 1) {
         entity = Bookmark;
         let repo = connection.getRepository(entity);
-        queryBuilder = repo.createQueryBuilder('bookmark')
-            .leftJoin('bookmark.user', 'user')
-            .leftJoinAndSelect('bookmark.tags', 'tags')
+        queryBuilder = repo.createQueryBuilder('link')
+            .leftJoinAndSelect('link.tags', 'tags')
             .orderBy({
-                [`bookmark.dateCreated`]: "DESC",
+                [`link.dateCreated`]: "DESC",
             });
     } else {
         entity = QuickLink;
         let repo = connection.getRepository(entity);
-        queryBuilder = repo.createQueryBuilder('ql')
-            .leftJoin('ql.user', 'user')
+        queryBuilder = repo.createQueryBuilder('link')
             .orderBy({
-                [`ql.dateCreated`]: "DESC",
+                [`link.dateCreated`]: "DESC",
             });;
 
 
     }
     if (userId) {
-        queryBuilder = queryBuilder.where("user.id = :userId", { userId });
+        queryBuilder = queryBuilder
+            .leftJoin('link.user', 'user')
+            .where("user.id = :userId", { userId });
     } else {
-        queryBuilder = queryBuilder.where("user is null")
+        queryBuilder = queryBuilder
+            .where("link.user is null")
+        console.log(queryBuilder.getSql());
     }
     return await queryBuilder.getMany();
 }
@@ -37,7 +39,6 @@ async function getLinks(type: Number, connection: Connection, userId?: string) {
 
 export const GetLinks = (connection: Connection) => async (req: Express.Request, res: Express.Response) => {
     const type = req.query.type;
-
 
     if (typeof type !== "string" || isNaN(parseInt(type))) {
         res.status(400);
