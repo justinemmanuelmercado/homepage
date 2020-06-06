@@ -61,6 +61,11 @@ export class BookmarksTable extends React.Component<Props, State> {
     return Math.ceil(length / this.props.items);
   }
 
+  private loadEverything = async () => {
+    this.props.loadBookmarks();
+    this.loadFilteredBookmarks();
+  };
+
   private renderTags = (): React.ReactNode => {
     const { tags, tag } = this.state;
     if (tags.length > 0) {
@@ -133,7 +138,7 @@ export class BookmarksTable extends React.Component<Props, State> {
       return (
         <BookmarkRow
           bm={bm}
-          onFinish={this.props.loadBookmarks}
+          onFinish={this.loadEverything}
           key={bm.id}
           check={this.check}
           checked={this.isChecked(bm.id)}
