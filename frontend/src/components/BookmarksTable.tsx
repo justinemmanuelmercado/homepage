@@ -62,8 +62,8 @@ export class BookmarksTable extends React.Component<Props, State> {
   }
 
   private loadEverything = async () => {
-    this.props.loadBookmarks();
-    this.loadFilteredBookmarks();
+    await this.props.loadBookmarks();
+    await this.loadFilteredBookmarks();
   };
 
   private renderTags = (): React.ReactNode => {
