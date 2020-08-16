@@ -4,7 +4,7 @@ import { QuickLink } from "../entity/QuickLink";
 import { Bookmark } from "../entity/Bookmark";
 import { BookmarkTag } from "../entity/BookmarkTag";
 // import { putLink } from "../db";
-import uuidv4 from "uuid/v4";
+import { v4 as uuidv4 } from "uuid";
 
 async function putLink(body: any, connection: Connection, userId?: string) {
     let newLink: QuickLink | Bookmark;
@@ -17,7 +17,7 @@ async function putLink(body: any, connection: Connection, userId?: string) {
         });
         newBookmark.note = body.note;
         newBookmark.thumbnail = body.thumbnail
-        if(userId){
+        if (userId) {
             newBookmark.user = userId;
         }
         const savedLink = await connection.manager.save(newBookmark);
@@ -44,7 +44,7 @@ async function putLink(body: any, connection: Connection, userId?: string) {
         if (body.thumbnail) {
             newQuicklink.thumbnail = body.thumbnail
         }
-        if(userId){
+        if (userId) {
             newQuicklink.user = userId;
         }
         await connection.manager.save(newQuicklink);
