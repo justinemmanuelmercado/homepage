@@ -10,7 +10,7 @@
     "@types/react-helmet": "^6.1.0",
     "awesome-debounce-promise": "^2.1.0",
     "aws-sdk": "^2.734.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bulma": "^0.9.0",
     "css-reset-and-normalize": "^2.1.0",
     "dotenv": "^8.2.0",
